@@ -1,11 +1,16 @@
-; dg/ftp-deployment config: PRODUCTION (Jino shared hosting, FTP). Copy to deployment.prod.ini (gitignored) and fill in.
-; `local` is resolved relative to this file: only public/ is uploaded.
-[anniversary-calendar]
-remote = ftp://your-production-server.example/www/anniversary-calendar
-user = your-ftp-username
+; Template for D:/dev/anniversary-calendar.deployment.prod.ini (one directory up, never in the repo).
+;   one-time: copy this file there by hand and fill in user/password
+;   make deploy-check -> dry run
+;   make deploy-prod  -> real upload
+
+[anniversary-calendar prod]
+remote = ftp://your-account.myjino.ru/
+user = your-ftp-user
 password = your-ftp-password
 passiveMode = yes
-local = public
+
+; resolved relative to the ini file (D:/dev): only public/ is uploaded
+local = anniversary-calendar/public
 test = no
 
 ignore = "
@@ -16,4 +21,3 @@ ignore = "
 
 allowDelete = yes
 preprocess = no
-deploymentFile = .deployment

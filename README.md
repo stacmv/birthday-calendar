@@ -69,9 +69,12 @@ docker run --rm -p 8080:8080 anniversary-calendar
 
 ## Deploy (Jino shared hosting, FTP)
 
-1. `make deploy-setup` - copies `../ga/deployment.phar` to `tools/` and creates `deployment.ini` / `deployment.prod.ini`
-   from the `*.example` files (both gitignored).
-2. Fill in the FTP host, user and password in `deployment.prod.ini` (`local = public`: only `public/` is uploaded).
-3. `make deploy-prod TEST=1` for a dry run, then `make deploy-prod`.
+The FTP config lives outside the repo, next to the other projects' configs:
+`D:/dev/anniversary-calendar.deployment.prod.ini` (template: `deployment.prod.ini.example`;
+`local = anniversary-calendar/public`, so only `public/` is uploaded).
+`deployment.phar` (dg/ftp-deployment) sits in the project root, gitignored.
+
+1. `make deploy-check` - dry run: what would be uploaded or deleted.
+2. `make deploy-prod` - build and upload.
 
 PWA installation needs HTTPS on the production domain.
