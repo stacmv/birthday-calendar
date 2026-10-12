@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jubilee Calendar: when will you turn 15,000 days old</title>
+  <meta name="description" content="Enter your date of birth and see your next life jubilees in days and hours: round and beautiful numbers, calendar export, works offline.">
+  <meta name="theme-color" content="#1d4ed8">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="Jubilee Calendar">
+  <meta property="og:description" content="Your next life jubilees in days and hours: round and beautiful numbers, calendar export, works offline.">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="../app/icons/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../app/icons/apple-touch-icon.png">
+  <link rel="alternate" hreflang="ru" href="../ru/">
+  <link rel="stylesheet" href="../shared/themes.css">
+  <link rel="stylesheet" href="../shared/landing.css">
+  <script src="../shared/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="wrap">
+    <header class="top">
+      <a class="brand" href="./"><img src="../app/icons/icon-192.png" alt="" width="32" height="32"><span>Jubilee Calendar</span></a>
+      <div class="top-tools">
+        <nav aria-label="Language">
+          <a class="lang" href="../ru/" lang="ru" hreflang="ru">RU</a>
+          <a class="lang" href="./" lang="en" hreflang="en" aria-current="page">EN</a>
+        </nav>
+        <select id="theme" aria-label="Theme">
+          <option value="system">System</option>
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="contrast">High contrast</option>
+        </select>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="hero">
+        <h1>Jubilee Calendar</h1>
+        <p class="lead">When will you turn 15,000 days or 400,000 hours old? Enter your date of birth and see your next life jubilees.</p>
+        <div class="cta">
+          <a class="btn" href="../app/">Open the app</a>
+          <a class="btn secondary" href="../app/">Install on your phone</a>
+        </div>
+        <p class="cta-note">Installation is offered on the app page.</p>
+      </div>
+
+      <section aria-labelledby="features-h">
+        <h2 id="features-h">What it does</h2>
+        <ul class="features">
+          <li>
+            <h3>Jubilees in days and hours</h3>
+            <p>The nearest round numbers: hundreds and thousands of days, hundreds and thousands of hours since birth, with dates. The time of birth is optional.</p>
+          </li>
+          <li>
+            <h3>Beautiful numbers</h3>
+            <p>Optionally, the list also shows the nearest beautiful numbers: repeated digits, sequences, palindromes. Off by default.</p>
+          </li>
+          <li>
+            <h3>Remembers your date</h3>
+            <p>Enter it once: the next time you open the app, the calendar appears right away. Change or forget the date in one tap.</p>
+          </li>
+          <li>
+            <h3>Calendar export</h3>
+            <p>Tick the jubilees and download an .ics file or add an event to Google Calendar. The last event in the file is a link that fetches the next jubilees.</p>
+          </li>
+          <li>
+            <h3>Works offline</h3>
+            <p>Install it on your phone and open it without a connection. Your data stays on your device.</p>
+          </li>
+          <li>
+            <h3>Themes and two languages</h3>
+            <p>System, light, dark and high-contrast themes. Russian and English.</p>
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="shots-h">
+        <h2 id="shots-h">What it looks like</h2>
+        <ul class="shots">
+          <li>
+            <figure>
+              <img src="../shots/en/form.png" width="780" height="1688" loading="lazy" alt="Input form: date and time of birth fields and the &quot;Show my jubilee calendar&quot; button.">
+              <figcaption>Date and time of birth</figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure>
+              <img src="../shots/en/calendar.png" width="780" height="1688" loading="lazy" alt="Jubilee calendar in days with beautiful numbers on: 13,300 days, 13,331 days labelled palindrome, and more.">
+              <figcaption>Calendar with beautiful numbers</figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure>
+              <img src="../shots/en/export.png" width="780" height="1688" loading="lazy" alt="List of jubilees with ticked checkboxes and &quot;Add to Google Calendar&quot; links.">
+              <figcaption>Ticking jubilees for export</figcaption>
+            </figure>
+          </li>
+        </ul>
+      </section>
+
+      <section class="final" aria-labelledby="final-h">
+        <h2 id="final-h">See your next jubilees</h2>
+        <div class="cta">
+          <a class="btn" href="../app/">Open the app</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Jubilee Calendar. <a href="../ru/" hreflang="ru" lang="ru">Русская версия</a></p>
+    </footer>
+  </div>
+  <script type="module">
+    import { bindThemeSelect } from '../shared/theme.js';
+    bindThemeSelect(document.getElementById('theme'));
+  </script>
+</body>
+</html>

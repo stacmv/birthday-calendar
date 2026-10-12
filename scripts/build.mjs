@@ -13,6 +13,8 @@ const appDir = path.join(publicDir, 'app');
 const BEGIN = '/* BUILD:BEGIN */';
 const END = '/* BUILD:END */';
 const EXCLUDED = new Set(['sw.js', 'offline.html']);
+// Landing-only assets are not part of the app shell.
+const EXCLUDED_SHARED = new Set(['landing.css']);
 
 function walk(dir) {
   const out = [];
@@ -31,6 +33,7 @@ export function shellFiles() {
     for (const file of walk(base)) {
       const rel = path.relative(appDir, file).split(path.sep).join('/');
       if (base === appDir && EXCLUDED.has(rel)) continue;
+      if (base !== appDir && EXCLUDED_SHARED.has(path.basename(file))) continue;
       files.push({ url: rel, file });
     }
   }

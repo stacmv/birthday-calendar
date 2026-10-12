@@ -1,0 +1,79 @@
+/* Landing pages (ru/en). Theme tokens come from themes.css. Mobile-first. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 1rem/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow-wrap: anywhere;
+}
+
+a { color: var(--primary); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+.wrap { max-width: 1000px; margin: 0 auto; padding: 0 16px; }
+
+.skip {
+  position: absolute; left: 8px; top: -60px; z-index: 10;
+  background: var(--primary); color: var(--on-primary); padding: 10px 14px; border-radius: 6px;
+}
+.skip:focus { top: 8px; }
+
+.top { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; padding: 12px 0; }
+.brand { font-weight: 700; display: inline-flex; align-items: center; gap: 8px; color: var(--text); text-decoration: none; min-height: 44px; }
+.brand img { width: 32px; height: 32px; border-radius: 8px; }
+.top-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.top-tools a.lang, .top-tools select {
+  min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center;
+  padding: 6px 12px; font: inherit; color: var(--text); background: var(--surface);
+  border: 1px solid var(--border); border-radius: 8px; text-decoration: none;
+}
+.top-tools a.lang[aria-current="page"] { background: var(--primary); color: var(--on-primary); border-color: var(--primary); font-weight: 600; }
+
+.hero { padding: 24px 0 32px; }
+.hero h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 12px; }
+.lead { font-size: 1.15rem; color: var(--muted); margin: 0 0 24px; max-width: 40rem; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 48px; padding: 10px 20px; font: inherit; font-weight: 600; text-decoration: none;
+  background: var(--primary); color: var(--on-primary); border: 2px solid var(--primary); border-radius: 10px;
+}
+.btn.secondary { background: transparent; color: var(--primary); }
+.cta-note { color: var(--muted); font-size: 0.9rem; margin: 12px 0 0; }
+
+section { padding: 24px 0; }
+h2 { font-size: 1.5rem; margin: 0 0 16px; }
+
+.features { display: grid; grid-template-columns: 1fr; gap: 12px; list-style: none; margin: 0; padding: 0; }
+.features li {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px;
+  box-shadow: var(--shadow);
+}
+.features h3 { margin: 0 0 6px; font-size: 1.05rem; }
+.features p { margin: 0; color: var(--muted); }
+
+.shots { display: grid; grid-template-columns: 1fr; gap: 24px; margin: 0; padding: 0; list-style: none; justify-items: center; }
+.shots figure { margin: 0; max-width: 300px; width: 100%; }
+.shots img {
+  display: block; width: 100%; height: auto;
+  border: 1px solid var(--border); border-radius: 16px; background: var(--surface);
+}
+.shots figcaption { margin-top: 8px; color: var(--muted); font-size: 0.95rem; text-align: center; }
+
+.final { text-align: center; }
+.final .cta { justify-content: center; }
+
+footer { padding: 24px 0 40px; color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--border); }
+
+@media (min-width: 720px) {
+  .hero h1 { font-size: 2.75rem; }
+  .features { grid-template-columns: repeat(2, 1fr); }
+  .shots { grid-template-columns: repeat(3, 1fr); align-items: start; }
+}
+
+@media (min-width: 960px) {
+  .features { grid-template-columns: repeat(3, 1fr); }
+}
