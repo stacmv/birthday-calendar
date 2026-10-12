@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Календарь юбилеев</title>
+  <link rel="icon" href="app/icons/favicon.svg" type="image/svg+xml">
+  <script>
+    // Pick the landing language; the links below work without JavaScript.
+    (function () {
+      var l = (navigator.language || 'ru').toLowerCase();
+      location.replace(l.indexOf('ru') === 0 ? 'ru/' : 'en/');
+    })();
+  </script>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; padding: 24px 16px; max-width: 480px; margin-inline: auto; line-height: 1.5; }
+    a { display: inline-block; min-height: 44px; padding: 8px 4px; }
+  </style>
+</head>
+<body>
+  <h1>Календарь юбилеев / Jubilee Calendar</h1>
+  <p><a href="ru/">Русский</a> · <a href="en/">English</a> · <a href="app/">Open the app / Открыть приложение</a></p>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "anniversary-calendar",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Birthday jubilee calendar: static HTML + vanilla JS PWA",
+  "scripts": {
+    "test": "vitest run",
+    "coverage": "vitest run --coverage",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0",
+    "sharp": "^0.34.0",
+    "vitest": "^3.0.0"
+  }
+}

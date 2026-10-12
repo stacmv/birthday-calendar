@@ -1,0 +1,76 @@
+/* Shared theme tokens for the app and the landing pages.
+   Themes: system (default; follows prefers-color-scheme), light, dark, contrast (high contrast). */
+
+:root {
+  color-scheme: light;
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-2: #e8eefc;
+  --text: #182033;
+  --muted: #4a5568;
+  --primary: #1d4ed8;
+  --on-primary: #ffffff;
+  --border: #b9c4d8;
+  --soon: #b42318;
+  --focus: #1d4ed8;
+  --badge-bg: #e8eefc;
+  --badge-text: #1e3a8a;
+  --shadow: 0 2px 8px rgba(24, 32, 51, 0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]),
+  :root[data-theme="system"] {
+    color-scheme: dark;
+    --bg: #0e1320;
+    --surface: #172033;
+    --surface-2: #1f2b45;
+    --text: #e8edf7;
+    --muted: #a9b4c9;
+    --primary: #8aaeff;
+    --on-primary: #0b1020;
+    --border: #3b4864;
+    --soon: #ff9b8f;
+    --focus: #a9c1ff;
+    --badge-bg: #26345a;
+    --badge-text: #cfdcff;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+}
+
+:root[data-theme="light"] { color-scheme: light; }
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1320;
+  --surface: #172033;
+  --surface-2: #1f2b45;
+  --text: #e8edf7;
+  --muted: #a9b4c9;
+  --primary: #8aaeff;
+  --on-primary: #0b1020;
+  --border: #3b4864;
+  --soon: #ff9b8f;
+  --focus: #a9c1ff;
+  --badge-bg: #26345a;
+  --badge-text: #cfdcff;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* High contrast: black background, white text, yellow accents (WCAG AAA contrast). */
+:root[data-theme="contrast"] {
+  color-scheme: dark;
+  --bg: #000000;
+  --surface: #000000;
+  --surface-2: #1a1a1a;
+  --text: #ffffff;
+  --muted: #f0f0f0;
+  --primary: #ffe600;
+  --on-primary: #000000;
+  --border: #ffffff;
+  --soon: #ffe600;
+  --focus: #00e5ff;
+  --badge-bg: #000000;
+  --badge-text: #ffe600;
+  --shadow: none;
+}

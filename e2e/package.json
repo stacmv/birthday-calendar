@@ -1,0 +1,9 @@
+{
+  "name": "anniversary-calendar-e2e",
+  "private": true,
+  "type": "module",
+  "description": "Playwright e2e + screenshots. Install and run from WSL ONLY (never launch a browser on the Windows host).",
+  "devDependencies": {
+    "@playwright/test": "1.56.1"
+  }
+}

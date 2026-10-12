@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Календарь юбилеев</title>
+  <meta name="description" content="Календарь юбилеев жизни: ближайшие круглые даты в днях и часах с момента рождения.">
+  <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../shared/themes.css">
+  <link rel="stylesheet" href="css/app.css">
+  <script src="../shared/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main" data-i18n="skip">К содержимому</a>
+  <header class="topbar">
+    <h1 data-i18n="appName">Календарь юбилеев</h1>
+    <div class="tools">
+      <div class="tool">
+        <label for="lang" data-i18n="langLabel">Язык</label>
+        <select id="lang">
+          <option value="ru">Русский</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+      <div class="tool">
+        <label for="theme" data-i18n="themeLabel">Тема</label>
+        <select id="theme">
+          <option value="system" data-i18n="themeSystem">Системная</option>
+          <option value="light" data-i18n="themeLight">Светлая</option>
+          <option value="dark" data-i18n="themeDark">Тёмная</option>
+          <option value="contrast" data-i18n="themeContrast">Контрастная</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1"></main>
+
+  <footer><p data-i18n="footerNote">Расчёт идёт в часовом поясе вашего браузера. Данные хранятся только на этом устройстве.</p></footer>
+
+  <noscript><p style="padding:16px">Для работы приложения нужен JavaScript.</p></noscript>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
