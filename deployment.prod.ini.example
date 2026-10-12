@@ -4,7 +4,7 @@
 ;   make deploy-prod  -> real upload
 
 [anniversary-calendar prod]
-remote = ftp://your-account.myjino.ru/
+remote = ftps://your-account.myjino.ru/
 user = your-ftp-user
 password = your-ftp-password
 passiveMode = yes
