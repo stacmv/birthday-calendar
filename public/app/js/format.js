@@ -1,5 +1,7 @@
 // Localisation helpers: plurals, numbers, dates. Pure, language passed explicitly.
 
+const NBSP = String.fromCharCode(0xa0);
+
 export const LANGS = ['ru', 'en'];
 
 const UNIT_FORMS = {
@@ -36,7 +38,7 @@ export function pluralWord(lang, unit, n) {
 /** 12345 -> "12 345" (ru, non-breaking space) / "12,345" (en). */
 export function formatNumber(n, lang) {
   const s = String(Math.trunc(n));
-  return s.replace(/\B(?=(\d{3})+(?!\d))/g, lang === 'ru' ? ' ' : ',');
+  return s.replace(/\B(?=(\d{3})+(?!\d))/g, lang === 'ru' ? NBSP : ',');
 }
 
 /** "15 мая 2030" (ru, no trailing "г.") / "May 15, 2030" (en). Uses the browser time zone. */
