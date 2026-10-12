@@ -7,3 +7,5 @@ deployment.ini
 deployment.prod.ini
 .deployment
 *.log
+/deployment.phar
+/tools/
