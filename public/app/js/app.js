@@ -1,8 +1,11 @@
-import { parseBirth, isValidDateStr, isValidTimeStr } from './calc.js';
+import { parseBirth } from './calc.js';
 import { buildModel } from './model.js';
 import { pluralWord, formatNumber, formatDateTime } from './format.js';
 import { detectLang, makeT } from './i18n.js';
 import { createStore, KEYS } from './storage.js';
+import {
+  validateBirth, buildPermalink, saveBirth, clearBirth, resolveInitialBirth,
+} from './birth.js';
 import { bindThemeSelect } from '../../shared/theme.js';
 
 const store = createStore();
@@ -10,8 +13,10 @@ const main = document.getElementById('main');
 
 let lang = detectLang(store.get(KEYS.lang), navigator.language);
 let t = makeT(lang);
-/** { d: 'YYYY-MM-DD', t: 'HH:MM' | '' } or null when no calendar is shown. */
+/** { d: 'YYYY-MM-DD', t: 'HH:MM' | '' } of the saved/entered birth, or null. */
 let birthState = null;
+/** True while the prefilled form is shown instead of the calendar. */
+let editing = false;
 
 /** Tiny DOM helper: h('div', {class: 'x'}, child, 'text'). */
 function h(tag, attrs = {}, ...children) {
@@ -47,14 +52,7 @@ function setLang(next) {
 }
 
 function appBaseUrl() {
-  return new URL('./', location.href);
-}
-
-function permalinkFor(b) {
-  const url = new URL(appBaseUrl());
-  url.searchParams.set('d', b.d);
-  if (b.t) url.searchParams.set('t', b.t);
-  return url.toString();
+  return new URL('./', location.href).toString();
 }
 
 // ---------- views ----------
@@ -75,6 +73,7 @@ function renderForm() {
       (problem === 'errTime' ? timeInput : dateInput).focus();
       return;
     }
+    saveBirth(store, b);
     showCalendar(b);
   } },
   h('h2', {}, t('formTitle')),
@@ -89,13 +88,6 @@ function renderForm() {
   h('button', { class: 'btn', type: 'submit' }, t('submit')));
 
   main.replaceChildren(form);
-}
-
-function validateBirth(b) {
-  if (!isValidDateStr(b.d)) return 'errDate';
-  if (b.t && !isValidTimeStr(b.t)) return 'errTime';
-  if (parseBirth(b.d, b.t) > new Date()) return 'errFuture';
-  return null;
 }
 
 function rowEl(row, hasTime) {
@@ -119,6 +111,31 @@ function section(title, nowLine, rows, hasTime) {
     h('ul', { class: 'list' }, rows.map((r) => rowEl(r, hasTime))));
 }
 
+async function copyText(text, input, status) {
+  try {
+    await navigator.clipboard.writeText(text);
+    status.textContent = t('copied');
+  } catch {
+    // Insecure context or denied: select the text so the user can copy it by hand.
+    input.focus();
+    input.select();
+    status.textContent = t('copyFail');
+  }
+}
+
+function permalinkSection() {
+  const link = buildPermalink(appBaseUrl(), birthState);
+  const input = h('input', { type: 'text', readonly: true, id: 'permalink', value: link });
+  const status = h('p', { class: 'status', role: 'status' });
+  return h('section', { class: 'card' },
+    h('h2', {}, t('permalink')),
+    h('div', { class: 'permalink' },
+      h('label', { class: 'sr-only', for: 'permalink' }, t('permalink')),
+      input,
+      h('button', { class: 'btn secondary', type: 'button', id: 'copy-link', onclick: () => copyText(link, input, status) }, t('copy'))),
+    status);
+}
+
 function renderCalendar() {
   const birth = parseBirth(birthState.d, birthState.t);
   const now = new Date();
@@ -128,40 +145,50 @@ function renderCalendar() {
   const nowLine = (sec) => h('span', {}, `${t('nowDays')} `,
     h('strong', {}, formatNumber(sec.current, lang)), ` ${pluralWord(lang, sec.unit, sec.current)}`);
 
-  const birthLine = h('section', { class: 'card birth-line' },
+  const birthLine = h('section', { class: 'card birth-line', 'aria-label': t('birthLine') },
     h('strong', {}, t('birthLine')),
-    h('span', {}, formatDateTime(birth, lang, hasTime)));
-
-  const link = permalinkFor(birthState);
-  const perma = h('section', { class: 'card' },
-    h('h2', {}, t('permalink')),
-    h('a', { href: link }, link));
+    h('span', { id: 'birth-text' }, formatDateTime(birth, lang, hasTime)),
+    h('button', { class: 'btn link', type: 'button', id: 'btn-change', onclick: () => { editing = true; render(); main.focus({ preventScroll: true }); } }, t('change')),
+    h('span', { 'aria-hidden': 'true' }, '/'),
+    h('button', { class: 'btn link', type: 'button', id: 'btn-forget', onclick: forget }, t('forget')));
 
   main.replaceChildren(
     birthLine,
     section(t('daysTitle'), nowLine(model.days), model.days.rows, hasTime),
     section(t('hoursTitle'), nowLine(model.hours), model.hours.rows, hasTime),
-    perma);
+    permalinkSection());
 }
 
 function showCalendar(b) {
   birthState = b;
+  editing = false;
   render();
   main.focus({ preventScroll: true });
   window.scrollTo(0, 0);
 }
 
+function forget() {
+  clearBirth(store);
+  birthState = null;
+  editing = false;
+  render();
+  main.focus({ preventScroll: true });
+}
+
 function render() {
-  if (birthState && !validateBirth(birthState)) renderCalendar();
+  if (birthState && !editing && !validateBirth(birthState)) renderCalendar();
   else renderForm();
 }
 
 // ---------- boot ----------
 
 function boot() {
-  const params = new URLSearchParams(location.search);
-  const fromUrl = { d: params.get('d') || '', t: params.get('t') || '' };
-  if (fromUrl.d && !validateBirth(fromUrl)) birthState = fromUrl;
+  const initial = resolveInitialBirth(store, location.search);
+  birthState = initial.birth;
+  if (initial.fromUrl) {
+    // The values are saved now: drop the params so "Forget" is not undone by a reload.
+    history.replaceState(null, '', location.pathname + location.hash);
+  }
 
   applyStaticStrings();
   bindThemeSelect(document.getElementById('theme'));
