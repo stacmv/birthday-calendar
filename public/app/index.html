@@ -5,7 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Календарь юбилеев</title>
   <meta name="description" content="Календарь юбилеев жизни: ближайшие круглые даты в днях и часах с момента рождения.">
+  <meta name="theme-color" content="#1d4ed8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Юбилеи">
+  <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <link rel="stylesheet" href="../shared/themes.css">
   <link rel="stylesheet" href="css/app.css">
   <script src="../shared/theme-init.js"></script>
@@ -33,6 +39,17 @@
       </div>
     </div>
   </header>
+
+  <div class="banners">
+    <div class="banner" id="update-banner" role="status" hidden>
+      <span data-i18n="updateAvailable">Доступна новая версия.</span>
+      <button class="btn" type="button" id="update-btn" data-i18n="updateNow">Обновить</button>
+    </div>
+    <div class="banner" id="install-banner" hidden>
+      <span id="ios-hint" data-i18n="iosHint" hidden>Чтобы установить: нажмите «Поделиться» и выберите «На экран Домой».</span>
+      <button class="btn" type="button" id="install-btn" data-i18n="install" hidden>Установить</button>
+    </div>
+  </div>
 
   <main id="main" tabindex="-1"></main>
 

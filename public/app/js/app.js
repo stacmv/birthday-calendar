@@ -7,6 +7,7 @@ import {
   validateBirth, buildPermalink, saveBirth, clearBirth, resolveInitialBirth,
 } from './birth.js';
 import { buildIcs, eventFor, googleCalendarUrl } from './export.js';
+import { initPwa } from './pwa.js';
 import { bindThemeSelect } from '../../shared/theme.js';
 
 const store = createStore();
@@ -262,6 +263,13 @@ function boot() {
   bindThemeSelect(document.getElementById('theme'));
   document.getElementById('lang').addEventListener('change', (e) => setLang(e.target.value));
   render();
+  initPwa({
+    installBanner: document.getElementById('install-banner'),
+    installButton: document.getElementById('install-btn'),
+    iosHint: document.getElementById('ios-hint'),
+    updateBanner: document.getElementById('update-banner'),
+    updateButton: document.getElementById('update-btn'),
+  });
 }
 
 boot();

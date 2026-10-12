@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help install serve test coverage test-e2e e2e-install lint build icons landing-screenshots deploy-setup deploy deploy-prod
+.PHONY: help install serve test coverage test-e2e e2e-install lint build build-check icons landing-screenshots deploy-setup deploy deploy-prod
 
 WSL_DIR := /mnt/d/dev/anniversary-calendar
 
@@ -28,3 +28,12 @@ e2e-install: ## Install Playwright for e2e INSIDE WSL (never on the Windows host
 
 test-e2e: ## Run Playwright e2e tests INSIDE WSL (headless Chromium; installs deps first if missing)
 	wsl -d Ubuntu -e bash -lc 'cd $(WSL_DIR)/e2e && { [ -d node_modules/@playwright/test ] || npm ci --no-bin-links --no-audit --no-fund; } && node node_modules/@playwright/test/cli.js test'
+
+build: ## Stamp public/app/sw.js with the shell list and a content-hash VERSION (idempotent)
+	node scripts/build.mjs
+
+build-check: ## Fail if sw.js is stale (run before committing)
+	node scripts/build.mjs --check
+
+icons: ## Regenerate PNG icons from public/app/icons/icon.svg (sharp, no browser)
+	node scripts/icons.mjs
