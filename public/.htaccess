@@ -7,6 +7,15 @@ AddType image/svg+xml .svg
 
 DirectoryIndex index.html
 
+# Force HTTPS: the PWA (service worker, install) only works over HTTPS.
+# X-Forwarded-Proto guards against a redirect loop behind a TLS-terminating proxy.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
+
 <IfModule mod_headers.c>
   # The service worker and the HTML entry points must always be revalidated.
   <FilesMatch "^(sw\.js|manifest\.webmanifest)$">
