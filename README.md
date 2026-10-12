@@ -1,18 +1,64 @@
-# Anniversary (jubilee) calendar
+# Jubilee calendar (anniversary-calendar)
 
-Static HTML + vanilla JS app: enter a date (and optionally a time) of birth and see
-the nearest round jubilees in days and hours. No framework, no bundler.
+Static HTML + vanilla JS PWA. Enter a date (and optionally a time) of birth and see the
+nearest jubilees in days and hours: round numbers (3 nearest multiples of 100 and of 1000),
+optional "beautiful" numbers (repdigits, digit sequences, palindromes, repeating pairs, two
+significant digits + zeros), export to `.ics` / Google Calendar, installable, works offline.
+RU and EN. No framework, no bundler (ES modules).
 
-Run `make help` for the list of targets.
+`make help` lists all targets.
 
 ## Layout
 
 - `public/` - deploy root
-  - `app/` - the application (RU/EN, themes, ES modules)
-  - `shared/` - theme tokens and switcher shared by the app and the landing pages
-  - `index.html` - picks the landing language
-- `tests/unit/` - vitest unit tests
-- `Dockerfile` - serves `public/` with the PHP built-in server
+  - `index.html` - picks the landing language (visible links as a fallback)
+  - `ru/`, `en/` - landing pages (no manifest or service worker of their own)
+  - `app/` - the PWA (`start_url`/scope `./` = `/app/`): `js/` modules, `sw.js`, `manifest.webmanifest`, `offline.html`, `icons/`
+  - `shared/` - theme tokens/switcher (`themes.css`, `theme.js`, `theme-init.js`) and `landing.css`
+  - `shots/{ru,en}/` - landing screenshots (generated)
+  - `.htaccess` - Apache config for Jino (MIME types, cache headers)
+- `tests/unit/` - vitest unit tests (pure logic: calc, format, beautiful numbers, ics/Google builders, storage, build stamp)
+- `e2e/` - Playwright tests (own `package.json`; installed and run **in WSL only**)
+- `scripts/` - `build.mjs` (sw.js stamp), `icons.mjs`, `screenshots.mjs`, `static-server.mjs`
+
+## Behaviour notes
+
+- The saved birth date lives in `localStorage` (`ac.birth`). `?d=YYYY-MM-DD&t=HH:MM` in the URL takes
+  precedence, **overwrites** the saved value and is then removed from the address bar (so "Forget" is not undone by a reload).
+- The permalink on the calendar page is built from the page location (works in a sub-directory).
+- Themes: `system` (default, follows the OS), `light`, `dark`, `contrast` (high contrast: black/white/yellow).
+  Persisted in `localStorage` (`ac.theme`), shared by the landing and the app.
+- Known differences from the old PHP version: hours are elapsed hours (not hour boundaries crossed) and the
+  year is the calendar year (the PHP `YYYY` ICU pattern was a week-year).
+
+## Service worker version
+
+`make build` rewrites the block between the `BUILD` markers in `public/app/sw.js`: the shell file list and a
+`VERSION` = sha256 content hash of those files (sw.js itself excluded, so the build is idempotent). The cache name
+changes exactly when a shipped file changes. Run `make build` before committing app changes
+(a unit test fails if `sw.js` is stale); `make deploy*` run it automatically.
+
+## Development
+
+```
+make install      # npm ci on the host (vitest, eslint, sharp)
+make serve        # http://localhost:8080  (landing: /, app: /app/)
+make test         # unit tests
+make lint
+make test-e2e     # Playwright inside WSL
+```
+
+### Browsers: WSL only
+
+Running headless Chromium/Edge on this Windows host can blue-screen it. Everything that
+launches a browser (`make test-e2e`, `make landing-screenshots`) runs inside WSL (Ubuntu) through
+`wsl -d Ubuntu -e bash -lc ...`; the Playwright package is installed from WSL into `e2e/node_modules`
+(`npm ci --no-bin-links`). `scripts/screenshots.mjs` refuses to run on Windows.
+
+### Landing screenshots
+
+`make landing-screenshots` recaptures `public/shots/` only when `public/app` or the shared theme files changed
+(hash in `scripts/.shots.hash`); `FORCE=1` recaptures anyway. Commit the PNGs and the hash file.
 
 ## Docker
 
@@ -21,9 +67,11 @@ docker build -t anniversary-calendar .
 docker run --rm -p 8080:8080 anniversary-calendar
 ```
 
-Then open http://localhost:8080/.
+## Deploy (Jino shared hosting, FTP)
 
-## Themes
+1. `make deploy-setup` - copies `../ga/deployment.phar` to `tools/` and creates `deployment.ini` / `deployment.prod.ini`
+   from the `*.example` files (both gitignored).
+2. Fill in the FTP host, user and password in `deployment.prod.ini` (`local = public`: only `public/` is uploaded).
+3. `make deploy-prod TEST=1` for a dry run, then `make deploy-prod`.
 
-`system` (default, follows the OS), `light`, `dark` and `contrast` (high contrast:
-black background, white text, yellow accents). Tokens live in `public/shared/themes.css`.
+PWA installation needs HTTPS on the production domain.
