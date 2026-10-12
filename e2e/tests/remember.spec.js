@@ -59,3 +59,18 @@ test('permalink reopens the same calendar', async ({ page, context }) => {
   await other.goto(link);
   await expect(other.locator('#birth-text')).toContainText('15 мая 1990');
 });
+
+test('beautiful numbers toggle: off by default, persists across reload', async ({ page }) => {
+  await page.goto('/app/');
+  await submit(page, '1990-05-15', '14:30');
+  const toggle = page.getByLabel(/Красивые числа/);
+  await expect(toggle).not.toBeChecked();
+  await expect(page.locator('.badge')).toHaveCount(0);
+  await toggle.check();
+  await expect(page.locator('.badge')).toHaveCount(10);
+  await page.reload();
+  await expect(page.getByLabel(/Красивые числа/)).toBeChecked();
+  await expect(page.locator('.badge')).toHaveCount(10);
+  await page.getByLabel(/Красивые числа/).uncheck();
+  await expect(page.locator('.badge')).toHaveCount(0);
+});

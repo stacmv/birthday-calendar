@@ -17,6 +17,8 @@ let t = makeT(lang);
 let birthState = null;
 /** True while the prefilled form is shown instead of the calendar. */
 let editing = false;
+/** "Beautiful numbers" toggle (persisted). */
+let beautiful = store.get(KEYS.beautiful) === '1';
 
 /** Tiny DOM helper: h('div', {class: 'x'}, child, 'text'). */
 function h(tag, attrs = {}, ...children) {
@@ -98,6 +100,7 @@ function rowEl(row, hasTime) {
   return h('li', { class: 'item' },
     h('div', { class: 'item-main' },
       h('span', { class: 'num' }, num),
+      row.kind ? h('span', { class: 'badge', 'data-kind': row.kind }, t(`kind_${row.kind}`)) : null,
       h('span', { class: row.soon ? 'when soon' : 'when' },
         row.soon ? `${t('soon')} · ` : '',
         `${t('will')} ${formatDateTime(row.date, lang, showTime)}`,
@@ -139,7 +142,7 @@ function permalinkSection() {
 function renderCalendar() {
   const birth = parseBirth(birthState.d, birthState.t);
   const now = new Date();
-  const model = buildModel(birth, now);
+  const model = buildModel(birth, now, { beautiful });
   const hasTime = !!birthState.t;
 
   const nowLine = (sec) => h('span', {}, `${t('nowDays')} `,
@@ -152,8 +155,19 @@ function renderCalendar() {
     h('span', { 'aria-hidden': 'true' }, '/'),
     h('button', { class: 'btn link', type: 'button', id: 'btn-forget', onclick: forget }, t('forget')));
 
+  const options = h('section', { class: 'card' },
+    h('label', { class: 'check', for: 'opt-beautiful' },
+      h('input', { type: 'checkbox', id: 'opt-beautiful', checked: beautiful, onchange: (e) => {
+        beautiful = e.target.checked;
+        store.set(KEYS.beautiful, beautiful ? '1' : '0');
+        renderCalendar();
+        document.getElementById('opt-beautiful').focus();
+      } }),
+      h('span', {}, h('strong', {}, t('beautifulToggle')), ' ', h('span', { class: 'hint' }, t('beautifulHint')))));
+
   main.replaceChildren(
     birthLine,
+    options,
     section(t('daysTitle'), nowLine(model.days), model.days.rows, hasTime),
     section(t('hoursTitle'), nowLine(model.hours), model.hours.rows, hasTime),
     permalinkSection());

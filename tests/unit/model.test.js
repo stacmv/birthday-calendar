@@ -29,6 +29,26 @@ describe('buildModel', () => {
   });
 });
 
+describe('buildModel with beautiful numbers', () => {
+  const birth = new Date(1990, 4, 15, 14, 30);
+  const now = new Date(2026, 9, 12, 10, 0);
+  it('is off by default: only round rows', () => {
+    expect(buildModel(birth, now).days.rows.every((r) => r.kind === null)).toBe(true);
+  });
+  it('adds up to 5 labelled rows per unit, sorted, without duplicating round numbers', () => {
+    const m = buildModel(birth, now, { beautiful: true });
+    for (const sec of [m.days, m.hours]) {
+      const ns = sec.rows.map((r) => r.n);
+      expect(ns).toEqual([...ns].sort((a, b) => a - b));
+      expect(new Set(ns).size).toBe(ns.length);
+      const extra = sec.rows.filter((r) => r.kind);
+      expect(extra.length).toBe(5);
+      expect(extra.every((r) => r.n > sec.current)).toBe(true);
+    }
+    expect(m.days.rows.filter((r) => !r.kind).map((r) => r.n)).toEqual([13300, 13400, 13500, 14000, 15000, 16000]);
+  });
+});
+
 describe('makeRow', () => {
   it('computes date and daysLeft', () => {
     const birth = new Date(2000, 0, 1, 0, 0);
