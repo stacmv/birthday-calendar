@@ -4,9 +4,10 @@
 // changes exactly when a shipped file changes. Do not edit that block by hand.
 
 /* BUILD:BEGIN */
-const VERSION = '1a1017e752cb';
+const VERSION = 'cd112eb5ae6b';
 const SHELL = [
   './',
+  '../shared/promo.js',
   '../shared/theme-init.js',
   '../shared/theme.js',
   '../shared/themes.css',

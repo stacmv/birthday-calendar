@@ -16,6 +16,8 @@ const MIME = {
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
   '.ico': 'image/x-icon',
+  '.jpg': 'image/jpeg',
+  '.mp4': 'video/mp4',
 };
 
 export function startServer(root, port = 0) {

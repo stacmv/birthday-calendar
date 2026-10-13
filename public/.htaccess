@@ -4,6 +4,7 @@ AddDefaultCharset UTF-8
 AddType application/manifest+json .webmanifest
 AddType text/javascript .js .mjs
 AddType image/svg+xml .svg
+AddType video/mp4 .mp4
 
 DirectoryIndex index.html
 
@@ -28,7 +29,7 @@ DirectoryIndex index.html
   <FilesMatch "\.(css|js|mjs)$">
     Header set Cache-Control "no-cache"
   </FilesMatch>
-  <FilesMatch "\.(png|svg|ico)$">
+  <FilesMatch "\.(png|svg|ico|jpg|mp4)$">
     Header set Cache-Control "public, max-age=2592000"
   </FilesMatch>
 </IfModule>
