@@ -42,3 +42,26 @@ test('every promo video and poster exists for both languages', async ({ request 
     }
   }
 });
+
+test('desktop: promo video sits left of the hero, vertically aligned; mobile: below it', async ({ browser }) => {
+  const box = (page, sel) => page.locator(sel).evaluate((e) => {
+    const r = e.getBoundingClientRect();
+    return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, mid: r.top + r.height / 2 };
+  });
+  const desktop = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+  await desktop.goto('/ru/');
+  const v = await box(desktop, '#promo');
+  const h = await box(desktop, '.hero');
+  expect(v.right).toBeLessThanOrEqual(h.left);
+  expect(Math.abs(v.mid - h.mid)).toBeLessThan(40);
+  // Visually hidden (still read by screen readers): the side-by-side layout needs no heading.
+  expect((await desktop.locator('#promo-h').boundingBox()).width).toBeLessThanOrEqual(1);
+  await desktop.close();
+
+  const phone = await browser.newPage({ viewport: { width: 360, height: 800 } });
+  await phone.goto('/ru/');
+  expect((await box(phone, '#promo')).top).toBeGreaterThanOrEqual((await box(phone, '.hero')).bottom);
+  await expect(phone.locator('#promo-h')).toBeVisible();
+  expect(await phone.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await phone.close();
+});

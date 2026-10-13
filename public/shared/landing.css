@@ -81,6 +81,20 @@ footer { padding: 24px 0 40px; color: var(--muted); font-size: 0.9rem; border-to
   .shots { grid-template-columns: repeat(3, 1fr); align-items: start; }
 }
 
+/* Desktop: video on the left, hero on the right (DOM keeps hero first for h1 order). */
+@media (min-width: 900px) {
+  .intro {
+    display: grid; grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+    gap: 40px; align-items: center; padding: 32px 0 16px;
+  }
+  .intro .promo { grid-column: 1; grid-row: 1; padding: 0; }
+  .intro .hero { grid-column: 2; grid-row: 1; padding: 0; }
+  .intro .promo h2 {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+}
+
 @media (min-width: 960px) {
   .features { grid-template-columns: repeat(3, 1fr); }
 }
