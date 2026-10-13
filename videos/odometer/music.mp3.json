@@ -1,0 +1,10 @@
+{
+  "input_hash": "26eef46009e6af8eb8dadc44c9fc1ea1ab79284aa87b8bfee07d29e122eadcc6",
+  "provider": "openrouter",
+  "model": "google/lyria-3-pro-preview",
+  "prompt": "Rhythmic light uplifting background music with a ticking clockwork pulse, playful mechanical percussion, bright plucks and soft synth, steady groove, builds gently, clean ending",
+  "requested_duration_s": 62.0,
+  "source_duration_s": 122.1,
+  "duration_s": 62.0,
+  "created": "2026-10-12T23:17:50Z"
+}

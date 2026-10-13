@@ -1,0 +1,68 @@
+<template>
+  <style>
+    @font-face { font-family: "Cormorant"; src: url("assets/fonts/Cormorant.ttf"); font-weight: 300 700; font-style: normal; }
+    @font-face { font-family: "Cormorant"; src: url("assets/fonts/Cormorant-Italic.ttf"); font-weight: 300 700; font-style: italic; }
+    @font-face { font-family: "Lora"; src: url("assets/fonts/Lora.ttf"); font-weight: 400 700; font-style: normal; }
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Cormorant", serif; color: #2A2018; font-variant-numeric: lining-nums; }
+    .f5-bg { position: absolute; inset: 0; background:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 .35 0 0 0 0 .27 0 0 0 0 .17 0 0 0 .45 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+      radial-gradient(ellipse at 50% 42%, #EFE6D2 0%, #E2D6BC 55%, #CBBD9C 100%); }
+    .f5-abs { position: absolute; }
+    .f5-card { left: 80px; width: 920px; height: 210px; border-radius: 10px; background: linear-gradient(160deg, #FFFBF1, #F4EAD3); box-shadow: 0 18px 34px rgba(60,40,10,.26), 0 2px 5px rgba(60,40,10,.2); }
+    .f5-card::before { content: ""; position: absolute; inset: 12px; border: 2px solid #B58A3A; border-radius: 4px; }
+    .f5-tx { position: absolute; left: 48px; top: 44px; width: 590px; }
+    .f5-h { font-size: 56px; font-weight: 700; line-height: 1; }
+    .f5-s { font-size: 38px; font-style: italic; font-weight: 500; color: #6B5A48; margin-top: 12px; line-height: 1.1; }
+    .f5-crop { position: absolute; right: 40px; top: 62px; width: 250px; height: 74px; border-radius: 10px; background-size: 275px 595px; background-position: -12px -99px; background-repeat: no-repeat; border: 2px solid #B9C4D8; }
+    .f5-icon { position: absolute; right: 90px; top: 40px; width: 130px; height: 130px; border-radius: 30px; box-shadow: 0 10px 20px rgba(30,40,100,.35); }
+    .f5-svg { position: absolute; right: 90px; top: 40px; width: 130px; height: 130px; }
+    #f5-foot { left: 0; top: 806px; width: 1080px; text-align: center; font-size: 54px; font-style: italic; font-weight: 500; }
+  </style>
+
+  <div id="root" data-composition-id="05-device" data-start="0" data-duration="8" data-width="1080" data-height="1080">
+    <div id="f5-bg" class="f5-bg clip" data-start="0" data-duration="8" data-track-index="0"></div>
+
+    <div id="f5-c1" class="f5-abs f5-card" style="top:66px">
+      <div class="f5-tx"><div class="f5-h" data-t="h1"></div><div class="f5-s" data-t="s1"></div></div>
+      <div id="f5-crop-ru" class="f5-crop" style="background-image:url(assets/ru-calendar.png)"></div>
+      <div id="f5-crop-en" class="f5-crop" style="background-image:url(assets/en-calendar.png)"></div>
+    </div>
+    <div id="f5-c2" class="f5-abs f5-card" style="top:306px">
+      <div class="f5-tx"><div class="f5-h" data-t="h2"></div><div class="f5-s" data-t="s2"></div></div>
+      <img id="f5-icon" class="f5-icon" src="assets/icon-512.png" />
+    </div>
+    <div id="f5-c3" class="f5-abs f5-card" style="top:546px">
+      <div class="f5-tx"><div class="f5-h" data-t="h3"></div><div class="f5-s" data-t="s3"></div></div>
+      <svg class="f5-svg" viewBox="0 0 130 130" fill="none" stroke="#2A2018" stroke-width="9" stroke-linecap="round">
+        <path d="M14 52 Q65 8 116 52"/><path d="M34 74 Q65 48 96 74"/><circle cx="65" cy="97" r="5" fill="#2A2018"/>
+        <line id="f5-slash" x1="20" y1="112" x2="110" y2="18" stroke="#9C1F2E" stroke-width="10"/>
+      </svg>
+    </div>
+    <div id="f5-foot" class="f5-abs" data-t="foot"></div>
+  </div>
+
+  <script>
+    (function () {
+      var V = Object.assign({}, window.__hfVariables || {}); if (!V.lang) { try { V = Object.assign(V, (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {}); } catch (e) {} }
+      var L = V.lang === "en" ? "en" : "ru";
+      var D = {
+        ru: { h1: "Помнит вашу дату", s1: "на этом устройстве", h2: "Ставится на телефон", s2: "как приложение", h3: "Работает без интернета", s3: "офлайн", foot: "счёт — прямо в браузере" },
+        en: { h1: "Remembers your date", s1: "on this device", h2: "Installs on your phone", s2: "like an app", h3: "Works offline", s3: "no connection needed", foot: "calculated right in the browser" }
+      }[L];
+      var root = document.querySelector('[data-composition-id="05-device"]');
+      root.querySelectorAll("[data-t]").forEach(function (e) { e.textContent = D[e.getAttribute("data-t")]; });
+      root.querySelector("#f5-crop-" + (L === "ru" ? "en" : "ru")).style.display = "none";
+      var tl = gsap.timeline({ paused: true });
+      var rot = [-1.2, 1, -0.8];
+      for (var i = 1; i <= 3; i++) {
+        tl.fromTo("#f5-c" + i, { opacity: 0, y: 90, rotation: rot[i - 1] * 4 }, { opacity: 1, y: 0, rotation: rot[i - 1], duration: 0.8, ease: "power3.out" }, 0.2 + (i - 1) * 1.9);
+      }
+      tl.from("#f5-crop-" + L, { scale: 0.8, opacity: 0, duration: 0.5, ease: "back.out(1.8)" }, 0.8);
+      tl.from("#f5-icon", { scale: 0.4, opacity: 0, rotation: -20, duration: 0.6, ease: "back.out(2)" }, 2.7);
+      tl.fromTo("#f5-slash", { strokeDasharray: 130, strokeDashoffset: 130 }, { strokeDashoffset: 0, duration: 0.5, ease: "power2.out" }, 4.8);
+      tl.fromTo("#f5-foot", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.7 }, 6.0);
+
+      window.__timelines["05-device"] = tl;
+    })();
+  </script>
+</template>

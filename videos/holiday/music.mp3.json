@@ -1,0 +1,10 @@
+{
+  "input_hash": "c9dff11705987b86feb8f9a2714d6b091bbf81d75c655b7cbc24d1afb8351dcd",
+  "provider": "openrouter",
+  "model": "google/lyria-3-pro-preview",
+  "prompt": "Gentle warm intimate solo piano, quiet and tender at first, then blooming with soft strings and light celesta at a joyful reveal, cozy celebration, warm ending",
+  "requested_duration_s": 60.0,
+  "source_duration_s": 59.82,
+  "duration_s": 60.0,
+  "created": "2026-10-12T23:33:01Z"
+}

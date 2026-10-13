@@ -1,0 +1,188 @@
+<template>
+<div id="root" data-composition-id="04-beautiful" data-start="0" data-duration="11.4" data-width="1080" data-height="1080">
+<style>
+@font-face{font-family:"DJV";src:url("assets/fonts/DejaVuSans.ttf");font-weight:400}
+@font-face{font-family:"DJV";src:url("assets/fonts/DejaVuSans-Bold.ttf");font-weight:700}
+@font-face{font-family:"DJVM";src:url("assets/fonts/DejaVuSansMono-Bold.ttf");font-weight:700}
+#root{font-family:"DJV",sans-serif;color:#182033;overflow:hidden}
+.bg{position:absolute;left:0;top:0;width:1080px;height:1080px;background:radial-gradient(ellipse at 50% 30%,#ffffff 0%,#eef2fb 55%,#e1e8f8 100%)}
+.bg:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(29,78,216,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(29,78,216,.05) 1px,transparent 1px);background-size:54px 54px}
+.od-row{display:flex;align-items:flex-start;padding:14px;background:#0d1530;border-radius:26px;box-shadow:0 18px 50px rgba(24,32,51,.35),inset 0 0 0 4px #1d4ed8}
+.od-drum{position:relative;overflow:hidden;background:#182033;border-radius:10px;margin:0 3px;font-family:"DJVM",monospace;font-weight:700;color:#fff;text-align:center;transition:none}
+.od-strip{position:absolute;left:0;top:0;width:100%;will-change:transform}
+.od-cell{width:100%;text-align:center}
+.od-drum:after{content:"";pointer-events:none;position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.75) 0%,rgba(0,0,0,0) 28%,rgba(0,0,0,0) 72%,rgba(0,0,0,.75) 100%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.07)}
+.od-drum.od-hl{color:#ffc53d}
+.od-sep{color:#ffc53d;font-family:"DJVM",monospace;font-weight:700;text-align:center;align-self:flex-start}
+.phone{position:absolute;background:#0d1530;border-radius:54px;padding:14px;box-shadow:0 30px 70px rgba(24,32,51,.35)}
+.phone .scr{position:relative;overflow:hidden;border-radius:42px;background:#f4f6fb}
+.phone img{position:absolute;left:0;top:0;display:block}
+.pill{position:absolute;display:inline-block;padding:12px 30px;border-radius:100px;font-weight:700;white-space:nowrap}
+.h1{position:absolute;left:60px;width:960px;font-weight:700;font-size:78px;line-height:1.08;letter-spacing:-1px;color:#182033}
+.kick{position:absolute;left:0;width:1080px;text-align:center;font-weight:700;font-size:34px;letter-spacing:5px;color:#1d4ed8}
+.blue{color:#1d4ed8}.red{color:#b42318}
+
+#f4-dial{position:absolute;left:-120px;top:-60px;width:1320px;height:1320px;opacity:.3}
+#f4-h{top:50px;text-align:center;left:20px;width:1040px;font-size:88px}
+#f4-tg{position:absolute;left:0;top:178px;width:1080px;display:flex;justify-content:center;align-items:center;gap:22px;font-size:38px;font-weight:700;color:#4a5568}
+#f4-sw{position:relative;width:104px;height:56px;border-radius:30px;background:#b9c4d8}
+#f4-kn{position:absolute;left:6px;top:6px;width:44px;height:44px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+#f4-ow{position:absolute;left:0;top:310px;width:1080px;display:flex;justify-content:center}
+#f4-lab{position:absolute;left:0;top:640px;width:1080px;text-align:center}
+#f4-labp{position:static;font-size:56px;background:#1d4ed8;color:#fff}
+#f4-ex{position:absolute;left:0;top:790px;width:1080px;display:flex;justify-content:center;gap:14px}
+.f4-ex{padding:10px 20px;border-radius:100px;font-family:"DJVM",monospace;font-weight:700;font-size:34px;border:3px solid #b9c4d8;background:#fff;color:#4a5568}
+</style>
+<div class="bg clip" data-start="0" data-duration="11.4" data-track-index="0"></div>
+<div id="f4-dial"></div>
+<div id="f4-h" class="h1"></div>
+<div id="f4-tg"><div id="f4-sw"><div id="f4-kn"></div></div><span id="f4-tgt"></span></div>
+<div id="f4-ow"><div id="f4-odo"></div></div>
+<div id="f4-lab"><span id="f4-labp" class="pill"></span></div>
+<div id="f4-ex"></div>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+/* shared odometer lib (inlined into each frame by build-frames.mjs) */
+var HF_LANG = (function () {
+  function ok(v) { return v === "en" || v === "ru" ? v : null; }
+  try { var o = window.__hfVariables; if (o && ok(o.lang)) return o.lang; } catch (e) {}
+  try { var v = window.__hyperframes.getVariables(); if (v && ok(v.lang)) return v.lang; } catch (e) {}
+  try {
+    var d = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]");
+    for (var i = 0; i < d.length; i++) if (d[i].id === "lang" && ok(d[i]["default"])) return d[i]["default"];
+  } catch (e) {}
+  return "ru";
+})();
+function ease3(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
+/* build an odometer inside host. opts: n digits, cw, ch, fs, sep ("" gap | ","), hideLead */
+function makeOdo(host, o) {
+  var n = o.n, drums = [], seps = [];
+  host.classList.add("od-row");
+  for (var k = n - 1; k >= 0; k--) {
+    var d = document.createElement("div");
+    d.className = "od-drum";
+    d.style.cssText = "width:" + o.cw + "px;height:" + o.ch + "px;font-size:" + o.fs + "px;line-height:" + o.ch + "px";
+    var s = document.createElement("div");
+    s.className = "od-strip";
+    var h = "";
+    for (var i = 0; i < 2; i++) h += '<div class="od-cell" style="height:' + o.ch + 'px">' + (i % 10) + "</div>";
+    s.innerHTML = h; s.setAttribute("data-layout-allow-occlusion", ""); s.children[0].setAttribute("data-layout-allow-occlusion", ""); s.children[1].setAttribute("data-layout-allow-occlusion", "");
+    d.appendChild(s);
+    host.appendChild(d);
+    drums[k] = { d: d, s: s, a: s.children[0], b: s.children[1] };
+    if (k > 0 && k % 3 === 0) {
+      var sp = document.createElement("div");
+      sp.className = "od-sep";
+      sp.style.cssText = "width:" + (o.sep ? o.cw * 0.3 : o.cw * 0.2) + "px;height:" + o.ch + "px;font-size:" + (o.fs * 0.8) + "px;line-height:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:" + (o.ch * 0.1) + "px";
+      sp.textContent = o.sep || "";
+      host.appendChild(sp);
+      seps[k] = sp;
+    }
+  }
+  function pos(k, v) {
+    var x = v / Math.pow(10, k), fl = Math.floor(x), fr = x - fl;
+    if (k === 0) return x;
+    var t = 1 - 1 / Math.pow(10, k);
+    return fl + ease3((fr - t) / (1 - t));
+  }
+  return {
+    drums: drums, el: host,
+    /* v1 = value now, v0 = value a moment earlier (for blur) */
+    draw: function (v1, v0, hl) {
+      for (var k = 0; k < n; k++) {
+        var p1 = pos(k, v1), p0 = pos(k, v0);
+        var m = ((p1 % 10) + 10) % 10;
+        var dr = drums[k];
+        var blur = Math.min(9, Math.abs(p1 - p0) * o.ch * 0.45);
+        var ii = Math.floor(m), ff = m - ii;
+        var ta = String(ii % 10), tb = String((ii + 1) % 10);
+        if (dr.a.textContent !== ta) dr.a.textContent = ta;
+        if (dr.b.textContent !== tb) dr.b.textContent = tb;
+        dr.b.style.visibility = ff > 0.003 ? "visible" : "hidden";
+        dr.s.style.transform = "translateY(" + (-ff * o.ch).toFixed(2) + "px)";
+        dr.s.style.filter = blur > 0.4 ? "blur(" + blur.toFixed(1) + "px)" : "none";
+        var lead = o.hideLead && k > 0 && Math.floor(v1 / Math.pow(10, k)) === 0;
+        dr.d.style.visibility = lead ? "hidden" : "visible";
+        dr.d.classList.toggle("od-hl", !!hl);
+        if (seps[k]) seps[k].style.visibility = (o.hideLead && Math.floor(v1 / Math.pow(10, k)) === 0) ? "hidden" : "visible";
+      }
+    }
+  };
+}
+/* pure value function from ticks: base + sum of eased steps. steps: [{t,dur,add}] */
+function stepsValue(base, steps, t) {
+  var v = base;
+  for (var i = 0; i < steps.length; i++) {
+    var s = steps[i];
+    var x = (t - s.t) / s.dur;
+    if (x <= 0) continue;
+    v += s.add * (x >= 1 ? 1 : 1 - Math.pow(1 - x, 3));
+  }
+  return v;
+}
+function beatRot(t, deg, P, dur) {
+  P = P || 0.5; dur = dur || 0.18;
+  var k = Math.floor(Math.max(0, t) / P), f = (t - k * P) / dur;
+  return (k + (f >= 1 ? 1 : 1 - Math.pow(1 - f, 3))) * deg;
+}
+function makeDial(el, size, color) {
+  var r = size / 2, s = '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + " " + size + '">';
+  for (var i = 0; i < 60; i++) {
+    var a = i * 6 * Math.PI / 180, big = i % 5 === 0, r1 = r - 4, r2 = r - (big ? 34 : 18);
+    s += '<line x1="' + (r + Math.sin(a) * r1).toFixed(1) + '" y1="' + (r - Math.cos(a) * r1).toFixed(1) + '" x2="' + (r + Math.sin(a) * r2).toFixed(1) + '" y2="' + (r - Math.cos(a) * r2).toFixed(1) + '" stroke="' + color + '" stroke-width="' + (big ? 6 : 3) + '" stroke-linecap="round"/>';
+  }
+  el.innerHTML = s + "</svg>";
+}
+function pickLang() {
+  var els = document.querySelectorAll("[data-l]");
+  for (var i = 0; i < els.length; i++) if (els[i].getAttribute("data-l") !== HF_LANG) els[i].style.display = "none";
+}
+
+(function () {
+  var D = {
+    ru: { h: "Красивые числа", tg: "по желанию", sep: "", labs: ["одинаковые цифры", "палиндром", "последовательность", "две цифры и нули", "повтор пар"], ex: ["11 111", "12 321", "12 345", "15 000", "121 212"] },
+    en: { h: "Beautiful numbers", tg: "optional", sep: ",", labs: ["same digits", "palindrome", "sequence", "two digits and zeros", "repeating pairs"], ex: ["11,111", "12,321", "12,345", "15,000", "121,212"] }
+  }[HF_LANG];
+  document.getElementById("f4-h").textContent = D.h;
+  document.getElementById("f4-tgt").textContent = D.tg;
+  makeDial(document.getElementById("f4-dial"), 1320, "#1d4ed8");
+  var odo = makeOdo(document.getElementById("f4-odo"), { n: 6, cw: 128, ch: 200, fs: 164, sep: D.sep, hideLead: true });
+  var exh = "";
+  for (var i = 0; i < 5; i++) exh += '<span class="f4-ex">' + D.ex[i] + "</span>";
+  var exEl = document.getElementById("f4-ex");
+  exEl.innerHTML = exh;
+  var ch = exEl.children;
+  var S = [{ t: 0.2, dur: 1.0, add: 11111 }, { t: 2.6, dur: 0.9, add: 1210 }, { t: 4.4, dur: 0.6, add: 24 }, { t: 6.0, dur: 1.0, add: 2655 }, { t: 8.0, dur: 1.2, add: 106212 }];
+  var labEl = document.getElementById("f4-labp"), labW = document.getElementById("f4-lab"), proxy = { t: 0 };
+  function render() {
+    var t = proxy.t, cur = -1, f = 9, hl = false;
+    for (var i = 0; i < 5; i++) { var e = S[i].t + S[i].dur; if (t >= e) { cur = i; f = t - e; } }
+    hl = cur >= 0 && f < 0.9;
+    odo.draw(stepsValue(0, S, t), stepsValue(0, S, t - 0.03), hl);
+    if (cur >= 0) {
+      if (labEl.textContent !== D.labs[cur]) labEl.textContent = D.labs[cur];
+      labW.style.opacity = 1;
+      labW.style.transform = "scale(" + (1 + 0.18 * Math.max(0, 1 - f * 5)).toFixed(3) + ")";
+    } else labW.style.opacity = 0;
+    for (var i = 0; i < 5; i++) {
+      var on = i === cur;
+      ch[i].style.background = on ? "#1d4ed8" : "#fff";
+      ch[i].style.color = on ? "#fff" : "#4a5568";
+      ch[i].style.borderColor = on ? "#1d4ed8" : "#b9c4d8";
+    }
+    document.getElementById("f4-dial").style.transform = "rotate(" + beatRot(t, 6, 0.5, 0.2).toFixed(2) + "deg)";
+  }
+  var tl = gsap.timeline({ paused: true });
+  tl.to(proxy, { t: 11, duration: 11, ease: "none", onUpdate: render }, 0);
+  tl.fromTo("#f4-h", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)", transformOrigin: "50% 50%" }, 0);
+  tl.fromTo("#f4-tg", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.3);
+  tl.to("#f4-kn", { x: 48, duration: 0.25, ease: "power2.out" }, 0.9);
+  tl.to("#f4-sw", { backgroundColor: "#1d4ed8", duration: 0.25 }, 0.9);
+  tl.fromTo("#f4-ow", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.4);
+  tl.fromTo("#f4-ex", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 1.0);
+  render();
+  window.__timelines["04-beautiful"] = tl;
+})();
+</script>
+</div>
+</template>

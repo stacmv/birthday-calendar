@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help install serve test coverage test-e2e e2e-install lint build build-check icons landing-screenshots deploy-check deploy-prod
+.PHONY: help install serve test coverage test-e2e e2e-install lint build build-check icons landing-screenshots promo-videos deploy-check deploy-prod
 
 WSL_DIR := /mnt/d/dev/anniversary-calendar
 DEPLOY_INI := ../anniversary-calendar.deployment.prod.ini
@@ -41,6 +41,9 @@ icons: ## Regenerate PNG icons from public/app/icons/icon.svg (sharp, no browser
 
 landing-screenshots: ## Recapture landing screenshots INSIDE WSL if public/app changed (FORCE=1 to override)
 	wsl -d Ubuntu -e bash -lc 'cd $(WSL_DIR) && FORCE=$(FORCE) node scripts/screenshots.mjs'
+
+promo-videos: ## Build landing promo videos (music + 720p + posters) from HyperFrames masters INSIDE WSL (FORCE=1 to rebuild)
+	wsl -d Ubuntu -e bash -lc 'cd $(WSL_DIR) && FORCE=$(FORCE) bash scripts/promo-videos.sh'
 
 deploy-check: build ## Dry run: list what deploy-prod would upload or delete
 	@test -f deployment.phar || { echo "ERROR: deployment.phar (dg/ftp-deployment) missing in the project root"; exit 2; }

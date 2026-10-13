@@ -1,0 +1,20 @@
+@font-face{font-family:"DJV";src:url("assets/fonts/DejaVuSans.ttf");font-weight:400}
+@font-face{font-family:"DJV";src:url("assets/fonts/DejaVuSans-Bold.ttf");font-weight:700}
+@font-face{font-family:"DJVM";src:url("assets/fonts/DejaVuSansMono-Bold.ttf");font-weight:700}
+#root{font-family:"DJV",sans-serif;color:#182033;overflow:hidden}
+.bg{position:absolute;left:0;top:0;width:1080px;height:1080px;background:radial-gradient(ellipse at 50% 30%,#ffffff 0%,#eef2fb 55%,#e1e8f8 100%)}
+.bg:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(29,78,216,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(29,78,216,.05) 1px,transparent 1px);background-size:54px 54px}
+.od-row{display:flex;align-items:flex-start;padding:14px;background:#0d1530;border-radius:26px;box-shadow:0 18px 50px rgba(24,32,51,.35),inset 0 0 0 4px #1d4ed8}
+.od-drum{position:relative;overflow:hidden;background:#182033;border-radius:10px;margin:0 3px;font-family:"DJVM",monospace;font-weight:700;color:#fff;text-align:center;transition:none}
+.od-strip{position:absolute;left:0;top:0;width:100%;will-change:transform}
+.od-cell{width:100%;text-align:center}
+.od-drum:after{content:"";pointer-events:none;position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.75) 0%,rgba(0,0,0,0) 28%,rgba(0,0,0,0) 72%,rgba(0,0,0,.75) 100%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.07)}
+.od-drum.od-hl{color:#ffc53d}
+.od-sep{color:#ffc53d;font-family:"DJVM",monospace;font-weight:700;text-align:center;align-self:flex-start}
+.phone{position:absolute;background:#0d1530;border-radius:54px;padding:14px;box-shadow:0 30px 70px rgba(24,32,51,.35)}
+.phone .scr{position:relative;overflow:hidden;border-radius:42px;background:#f4f6fb}
+.phone img{position:absolute;left:0;top:0;display:block}
+.pill{position:absolute;display:inline-block;padding:12px 30px;border-radius:100px;font-weight:700;white-space:nowrap}
+.h1{position:absolute;left:60px;width:960px;font-weight:700;font-size:78px;line-height:1.08;letter-spacing:-1px;color:#182033}
+.kick{position:absolute;left:0;width:1080px;text-align:center;font-weight:700;font-size:34px;letter-spacing:5px;color:#1d4ed8}
+.blue{color:#1d4ed8}.red{color:#b42318}

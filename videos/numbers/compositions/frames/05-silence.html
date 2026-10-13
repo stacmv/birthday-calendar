@@ -1,0 +1,42 @@
+<template>
+  <style>
+    @font-face { font-family: "Inter"; font-weight: 100 900; src: url("assets/fonts/inter-cyrillic.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+    @font-face { font-family: "Inter"; font-weight: 100 900; src: url("assets/fonts/inter-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Inter", sans-serif; color: #182033; }
+    .n05bg { position: absolute; inset: 0; background: #0E1424; }
+    .s5d { position: absolute; width: 150px; height: 250px; line-height: 250px; text-align: center; font-size: 250px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; top: 375px; color: #F4F6FB; font-weight: 700; }
+    #s5-line { position: absolute; left: 135px; top: 690px; width: 810px; height: 3px; background: #F4F6FB; opacity: 0.5; transform-origin: 50% 50%; }
+    #s5-cap { position: absolute; left: 0; right: 0; text-align: center; font-weight: 700; top: 760px; font-size: 54px; font-weight: 500; letter-spacing: 0.06em; color: #C9D3EA; }
+  </style>
+  <div id="root" data-composition-id="05-silence" data-start="0" data-duration="7" data-width="1080" data-height="1080">
+    <div id="n05-bg" class="n05bg clip" data-start="0" data-duration="7" data-track-index="0"></div>
+    <div id="n05-stage" class="clip" data-start="0" data-duration="7" data-track-index="1" style="position:absolute;inset:0;">
+      <div class="s5d" id="s5-d0">1</div><div class="s5d" id="s5-d1">0</div><div class="s5d" id="s5-d2">0</div><div class="s5d" id="s5-d3">0</div><div class="s5d" id="s5-d4">0</div>
+      <div id="s5-line"></div>
+      <div id="s5-cap" data-ru="дней. круглая дата." data-en="days. a round milestone.">дней. круглая дата.</div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var LANG = (function () {
+        var v = window.__hfVariables;
+        if (v && (v.lang === "en" || v.lang === "ru")) return v.lang;
+        try {
+          var d = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]");
+          for (var i = 0; i < d.length; i++) if (d[i].id === "lang") return d[i]["default"] === "en" ? "en" : "ru";
+        } catch (e) {}
+        return "ru";
+      })();
+      document.querySelectorAll("[data-ru]").forEach(function (e) { e.textContent = LANG === "en" ? e.getAttribute("data-en") : e.getAttribute("data-ru"); });
+      var tl = gsap.timeline({ paused: true });
+      var SLOT = [135, 285, 495, 645, 795];
+      for (var i = 0; i < 5; i++) gsap.set("#s5-d" + i, { left: SLOT[i] });
+      gsap.set("#s5-cap", { opacity: 0 });
+      // hushed: one digit at a time, no bounce, no motion beyond a slow fade
+      for (var i = 0; i < 5; i++) tl.fromTo("#s5-d" + i, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 1.1, ease: "sine.out" }, 0.5 + i * 0.75);
+      tl.fromTo("#s5-line", { scaleX: 0 }, { scaleX: 1, duration: 1.4, ease: "sine.inOut" }, 3.9);
+      tl.fromTo("#s5-cap", { opacity: 0 }, { opacity: 1, duration: 1.2, ease: "sine.out" }, 4.7);
+      window.__timelines["05-silence"] = tl;
+    })();
+  </script>
+</template>

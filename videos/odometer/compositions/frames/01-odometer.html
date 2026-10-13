@@ -1,0 +1,194 @@
+<template>
+<div id="root" data-composition-id="01-odometer" data-start="0" data-duration="8.9" data-width="1080" data-height="1080">
+<style>
+@font-face{font-family:"DJV";src:url("assets/fonts/DejaVuSans.ttf");font-weight:400}
+@font-face{font-family:"DJV";src:url("assets/fonts/DejaVuSans-Bold.ttf");font-weight:700}
+@font-face{font-family:"DJVM";src:url("assets/fonts/DejaVuSansMono-Bold.ttf");font-weight:700}
+#root{font-family:"DJV",sans-serif;color:#182033;overflow:hidden}
+.bg{position:absolute;left:0;top:0;width:1080px;height:1080px;background:radial-gradient(ellipse at 50% 30%,#ffffff 0%,#eef2fb 55%,#e1e8f8 100%)}
+.bg:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(29,78,216,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(29,78,216,.05) 1px,transparent 1px);background-size:54px 54px}
+.od-row{display:flex;align-items:flex-start;padding:14px;background:#0d1530;border-radius:26px;box-shadow:0 18px 50px rgba(24,32,51,.35),inset 0 0 0 4px #1d4ed8}
+.od-drum{position:relative;overflow:hidden;background:#182033;border-radius:10px;margin:0 3px;font-family:"DJVM",monospace;font-weight:700;color:#fff;text-align:center;transition:none}
+.od-strip{position:absolute;left:0;top:0;width:100%;will-change:transform}
+.od-cell{width:100%;text-align:center}
+.od-drum:after{content:"";pointer-events:none;position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.75) 0%,rgba(0,0,0,0) 28%,rgba(0,0,0,0) 72%,rgba(0,0,0,.75) 100%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.07)}
+.od-drum.od-hl{color:#ffc53d}
+.od-sep{color:#ffc53d;font-family:"DJVM",monospace;font-weight:700;text-align:center;align-self:flex-start}
+.phone{position:absolute;background:#0d1530;border-radius:54px;padding:14px;box-shadow:0 30px 70px rgba(24,32,51,.35)}
+.phone .scr{position:relative;overflow:hidden;border-radius:42px;background:#f4f6fb}
+.phone img{position:absolute;left:0;top:0;display:block}
+.pill{position:absolute;display:inline-block;padding:12px 30px;border-radius:100px;font-weight:700;white-space:nowrap}
+.h1{position:absolute;left:60px;width:960px;font-weight:700;font-size:78px;line-height:1.08;letter-spacing:-1px;color:#182033}
+.kick{position:absolute;left:0;width:1080px;text-align:center;font-weight:700;font-size:34px;letter-spacing:5px;color:#1d4ed8}
+.blue{color:#1d4ed8}.red{color:#b42318}
+
+#f1-dial{position:absolute;left:90px;top:90px;width:900px;height:900px;opacity:.35}
+#f1-wrap{position:absolute;left:0;top:380px;width:1080px;display:flex;justify-content:center}
+#f1-ring{position:absolute;left:118px;top:377px;width:844px;height:264px;border:8px solid #ffc53d;border-radius:30px;opacity:0}
+#f1-dots{position:absolute;left:0;top:730px;width:1080px;display:flex;justify-content:center;gap:26px}
+.f1-dot{width:34px;height:34px;border-radius:50%;border:5px solid #1d4ed8;background:transparent}
+#f1-kick{top:130px}
+#f1-l1{position:absolute;left:40px;width:1000px;top:610px;text-align:center;font-weight:700;font-size:100px;line-height:1.1;letter-spacing:-2px;opacity:0}
+#f1-l2{position:absolute;left:40px;width:1000px;top:730px;text-align:center;font-weight:700;font-size:70px;line-height:1.1;color:#1d4ed8;opacity:0}
+#f1-pill{left:0;top:870px;font-size:52px;background:#1d4ed8;color:#fff}
+</style>
+<div class="bg clip" data-start="0" data-duration="8.9" data-track-index="0"></div>
+<div id="f1-dial"></div>
+<div id="f1-kick" class="kick"></div>
+<div id="f1-grp">
+  <div id="f1-wrap"><div id="f1-odo"></div></div>
+  <div id="f1-ring"></div>
+  <div id="f1-dots"></div>
+</div>
+<div id="f1-l1"></div>
+<div id="f1-l2"></div>
+<div id="f1-pillw" style="position:absolute;left:0;top:870px;width:1080px;text-align:center"><span id="f1-pill" class="pill" style="position:static"></span></div>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+/* shared odometer lib (inlined into each frame by build-frames.mjs) */
+var HF_LANG = (function () {
+  function ok(v) { return v === "en" || v === "ru" ? v : null; }
+  try { var o = window.__hfVariables; if (o && ok(o.lang)) return o.lang; } catch (e) {}
+  try { var v = window.__hyperframes.getVariables(); if (v && ok(v.lang)) return v.lang; } catch (e) {}
+  try {
+    var d = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]");
+    for (var i = 0; i < d.length; i++) if (d[i].id === "lang" && ok(d[i]["default"])) return d[i]["default"];
+  } catch (e) {}
+  return "ru";
+})();
+function ease3(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
+/* build an odometer inside host. opts: n digits, cw, ch, fs, sep ("" gap | ","), hideLead */
+function makeOdo(host, o) {
+  var n = o.n, drums = [], seps = [];
+  host.classList.add("od-row");
+  for (var k = n - 1; k >= 0; k--) {
+    var d = document.createElement("div");
+    d.className = "od-drum";
+    d.style.cssText = "width:" + o.cw + "px;height:" + o.ch + "px;font-size:" + o.fs + "px;line-height:" + o.ch + "px";
+    var s = document.createElement("div");
+    s.className = "od-strip";
+    var h = "";
+    for (var i = 0; i < 2; i++) h += '<div class="od-cell" style="height:' + o.ch + 'px">' + (i % 10) + "</div>";
+    s.innerHTML = h; s.setAttribute("data-layout-allow-occlusion", ""); s.children[0].setAttribute("data-layout-allow-occlusion", ""); s.children[1].setAttribute("data-layout-allow-occlusion", "");
+    d.appendChild(s);
+    host.appendChild(d);
+    drums[k] = { d: d, s: s, a: s.children[0], b: s.children[1] };
+    if (k > 0 && k % 3 === 0) {
+      var sp = document.createElement("div");
+      sp.className = "od-sep";
+      sp.style.cssText = "width:" + (o.sep ? o.cw * 0.3 : o.cw * 0.2) + "px;height:" + o.ch + "px;font-size:" + (o.fs * 0.8) + "px;line-height:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:" + (o.ch * 0.1) + "px";
+      sp.textContent = o.sep || "";
+      host.appendChild(sp);
+      seps[k] = sp;
+    }
+  }
+  function pos(k, v) {
+    var x = v / Math.pow(10, k), fl = Math.floor(x), fr = x - fl;
+    if (k === 0) return x;
+    var t = 1 - 1 / Math.pow(10, k);
+    return fl + ease3((fr - t) / (1 - t));
+  }
+  return {
+    drums: drums, el: host,
+    /* v1 = value now, v0 = value a moment earlier (for blur) */
+    draw: function (v1, v0, hl) {
+      for (var k = 0; k < n; k++) {
+        var p1 = pos(k, v1), p0 = pos(k, v0);
+        var m = ((p1 % 10) + 10) % 10;
+        var dr = drums[k];
+        var blur = Math.min(9, Math.abs(p1 - p0) * o.ch * 0.45);
+        var ii = Math.floor(m), ff = m - ii;
+        var ta = String(ii % 10), tb = String((ii + 1) % 10);
+        if (dr.a.textContent !== ta) dr.a.textContent = ta;
+        if (dr.b.textContent !== tb) dr.b.textContent = tb;
+        dr.b.style.visibility = ff > 0.003 ? "visible" : "hidden";
+        dr.s.style.transform = "translateY(" + (-ff * o.ch).toFixed(2) + "px)";
+        dr.s.style.filter = blur > 0.4 ? "blur(" + blur.toFixed(1) + "px)" : "none";
+        var lead = o.hideLead && k > 0 && Math.floor(v1 / Math.pow(10, k)) === 0;
+        dr.d.style.visibility = lead ? "hidden" : "visible";
+        dr.d.classList.toggle("od-hl", !!hl);
+        if (seps[k]) seps[k].style.visibility = (o.hideLead && Math.floor(v1 / Math.pow(10, k)) === 0) ? "hidden" : "visible";
+      }
+    }
+  };
+}
+/* pure value function from ticks: base + sum of eased steps. steps: [{t,dur,add}] */
+function stepsValue(base, steps, t) {
+  var v = base;
+  for (var i = 0; i < steps.length; i++) {
+    var s = steps[i];
+    var x = (t - s.t) / s.dur;
+    if (x <= 0) continue;
+    v += s.add * (x >= 1 ? 1 : 1 - Math.pow(1 - x, 3));
+  }
+  return v;
+}
+function beatRot(t, deg, P, dur) {
+  P = P || 0.5; dur = dur || 0.18;
+  var k = Math.floor(Math.max(0, t) / P), f = (t - k * P) / dur;
+  return (k + (f >= 1 ? 1 : 1 - Math.pow(1 - f, 3))) * deg;
+}
+function makeDial(el, size, color) {
+  var r = size / 2, s = '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + " " + size + '">';
+  for (var i = 0; i < 60; i++) {
+    var a = i * 6 * Math.PI / 180, big = i % 5 === 0, r1 = r - 4, r2 = r - (big ? 34 : 18);
+    s += '<line x1="' + (r + Math.sin(a) * r1).toFixed(1) + '" y1="' + (r - Math.cos(a) * r1).toFixed(1) + '" x2="' + (r + Math.sin(a) * r2).toFixed(1) + '" y2="' + (r - Math.cos(a) * r2).toFixed(1) + '" stroke="' + color + '" stroke-width="' + (big ? 6 : 3) + '" stroke-linecap="round"/>';
+  }
+  el.innerHTML = s + "</svg>";
+}
+function pickLang() {
+  var els = document.querySelectorAll("[data-l]");
+  for (var i = 0; i < els.length; i++) if (els[i].getAttribute("data-l") !== HF_LANG) els[i].style.display = "none";
+}
+
+(function () {
+  var D = {
+    ru: { kick: "ДНЕЙ ВЫ УЖЕ ПРОЖИЛИ", l1: "Через 8 дней", l2: "вам будет 12 345 дней.", pill: "Это красивое число.", sep: "" },
+    en: { kick: "DAYS YOU’VE LIVED", l1: "In 8 days", l2: "you’ll be 12,345 days old.", pill: "That’s a beautiful number.", sep: "," }
+  }[HF_LANG];
+  document.getElementById("f1-kick").textContent = D.kick;
+  document.getElementById("f1-l1").textContent = D.l1;
+  document.getElementById("f1-l2").textContent = D.l2; if (HF_LANG === "en") document.getElementById("f1-l2").style.fontSize = "56px";
+  document.getElementById("f1-pill").textContent = D.pill;
+  makeDial(document.getElementById("f1-dial"), 900, "#1d4ed8");
+  var odo = makeOdo(document.getElementById("f1-odo"), { n: 5, cw: 150, ch: 230, fs: 190, sep: D.sep });
+  var dots = document.getElementById("f1-dots"), dh = "";
+  for (var i = 0; i < 8; i++) dh += '<div class="f1-dot"></div>';
+  dots.innerHTML = dh;
+  var dotEls = dots.children;
+  var steps = [];
+  for (var i = 0; i <= 8; i++) steps.push({ t: 0.5 * i - 0.12, dur: 0.4, add: 1 });
+  var proxy = { t: 0 };
+  function render() {
+    var t = proxy.t;
+    odo.draw(stepsValue(12336, steps, t), stepsValue(12336, steps, t - 0.03), t > 4.35 && t < 6.2);
+    document.getElementById("f1-dial").style.transform = "rotate(" + beatRot(t, 6, 0.5, 0.2).toFixed(2) + "deg)";
+    for (var i = 0; i < 8; i++) {
+      var on = t > 0.5 * (i + 1) + 0.15;
+      var amber = t > 4.35;
+      dotEls[i].style.background = on ? (amber ? "#ffc53d" : "#1d4ed8") : "transparent";
+      dotEls[i].style.borderColor = amber && on ? "#ffc53d" : "#1d4ed8";
+    }
+  }
+  var tl = gsap.timeline({ paused: true });
+  tl.to(proxy, { t: 8.5, duration: 8.5, ease: "none", onUpdate: render }, 0);
+  /* hook: kicker slams in on first beat, drums already spinning */
+  tl.fromTo("#f1-kick", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(2)" }, 0);
+  tl.fromTo("#f1-dots", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.1);
+  /* stop beat */
+  tl.fromTo("#f1-wrap", { scale: 1 }, { scale: 1.07, duration: 0.14, ease: "power2.out", transformOrigin: "50% 50%", immediateRender: false }, 4.3);
+  tl.to("#f1-wrap", { scale: 1, duration: 0.4, ease: "elastic.out(1,0.5)", transformOrigin: "50% 50%" }, 4.44);
+  tl.fromTo("#f1-ring", { opacity: 0.95, scale: 0.92 }, { opacity: 0, scale: 1.35, duration: 0.9, ease: "power2.out", transformOrigin: "50% 50%", immediateRender: false }, 4.3);
+  /* counter group moves up, message arrives */
+  tl.to("#f1-grp", { y: -190, duration: 0.7, ease: "power3.inOut" }, 4.6);
+  tl.to("#f1-dots", { opacity: 0, duration: 0.3 }, 4.6);
+  tl.to("#f1-kick", { opacity: 0, duration: 0.3 }, 4.6);
+  tl.fromTo("#f1-l1", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.6, ease: "back.out(1.6)" }, 5.0);
+  tl.fromTo("#f1-l2", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 5.6);
+  tl.fromTo("#f1-pillw", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2.2)", transformOrigin: "50% 50%" }, 6.5);
+  render();
+  window.__timelines["01-odometer"] = tl;
+})();
+</script>
+</div>
+</template>

@@ -1,0 +1,172 @@
+<template>
+<div id="root" data-composition-id="06-export" data-start="0" data-duration="7.4" data-width="1080" data-height="1080">
+<style>
+@font-face{font-family:"DJV";src:url("assets/fonts/DejaVuSans.ttf");font-weight:400}
+@font-face{font-family:"DJV";src:url("assets/fonts/DejaVuSans-Bold.ttf");font-weight:700}
+@font-face{font-family:"DJVM";src:url("assets/fonts/DejaVuSansMono-Bold.ttf");font-weight:700}
+#root{font-family:"DJV",sans-serif;color:#182033;overflow:hidden}
+.bg{position:absolute;left:0;top:0;width:1080px;height:1080px;background:radial-gradient(ellipse at 50% 30%,#ffffff 0%,#eef2fb 55%,#e1e8f8 100%)}
+.bg:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(29,78,216,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(29,78,216,.05) 1px,transparent 1px);background-size:54px 54px}
+.od-row{display:flex;align-items:flex-start;padding:14px;background:#0d1530;border-radius:26px;box-shadow:0 18px 50px rgba(24,32,51,.35),inset 0 0 0 4px #1d4ed8}
+.od-drum{position:relative;overflow:hidden;background:#182033;border-radius:10px;margin:0 3px;font-family:"DJVM",monospace;font-weight:700;color:#fff;text-align:center;transition:none}
+.od-strip{position:absolute;left:0;top:0;width:100%;will-change:transform}
+.od-cell{width:100%;text-align:center}
+.od-drum:after{content:"";pointer-events:none;position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.75) 0%,rgba(0,0,0,0) 28%,rgba(0,0,0,0) 72%,rgba(0,0,0,.75) 100%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.07)}
+.od-drum.od-hl{color:#ffc53d}
+.od-sep{color:#ffc53d;font-family:"DJVM",monospace;font-weight:700;text-align:center;align-self:flex-start}
+.phone{position:absolute;background:#0d1530;border-radius:54px;padding:14px;box-shadow:0 30px 70px rgba(24,32,51,.35)}
+.phone .scr{position:relative;overflow:hidden;border-radius:42px;background:#f4f6fb}
+.phone img{position:absolute;left:0;top:0;display:block}
+.pill{position:absolute;display:inline-block;padding:12px 30px;border-radius:100px;font-weight:700;white-space:nowrap}
+.h1{position:absolute;left:60px;width:960px;font-weight:700;font-size:78px;line-height:1.08;letter-spacing:-1px;color:#182033}
+.kick{position:absolute;left:0;width:1080px;text-align:center;font-weight:700;font-size:34px;letter-spacing:5px;color:#1d4ed8}
+.blue{color:#1d4ed8}.red{color:#b42318}
+
+#f6-h{top:50px;text-align:center;left:20px;width:1040px;font-size:64px}
+#f6-grid{position:absolute;left:40px;top:200px;width:560px;height:410px;background:#fff;border:3px solid #b9c4d8;border-radius:28px;box-shadow:0 10px 30px rgba(24,32,51,.12);padding:20px;display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(5,1fr);gap:8px}
+.f6-d{display:flex;align-items:center;justify-content:center;border-radius:14px;font-weight:700;font-size:28px;color:#566380;background:#f4f6fb}
+#f6-chips{position:absolute;left:40px;top:640px;width:560px;display:flex;gap:10px}
+.f6-c{flex:1;text-align:center;padding:12px 0;border-radius:100px;background:#1d4ed8;color:#fff;font-weight:700;font-size:25px;white-space:nowrap}
+.f6-b{position:absolute;left:40px;width:560px;padding:20px 0;border-radius:24px;text-align:center;font-weight:700;font-size:38px}
+#f6-ics{top:740px;background:#182033;color:#fff}
+#f6-g{top:850px;background:#fff;color:#1d4ed8;border:4px solid #1d4ed8}
+#f6-phone{left:640px;top:250px;width:360px;transform-origin:50% 50%}
+#f6-phone .scr{width:360px;height:779px}
+#f6-phone img{width:360px;height:779px}
+</style>
+<div class="bg clip" data-start="0" data-duration="7.4" data-track-index="0"></div>
+<div id="f6-h" class="h1"></div>
+<div id="f6-grid"></div>
+<div id="f6-chips"></div>
+<div id="f6-ics" class="f6-b"></div>
+<div id="f6-g" class="f6-b"></div>
+<div id="f6-phone" class="phone"><div class="scr"><img data-l="ru" src="assets/ru/export.png"><img data-l="en" src="assets/en/export.png"></div></div>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+/* shared odometer lib (inlined into each frame by build-frames.mjs) */
+var HF_LANG = (function () {
+  function ok(v) { return v === "en" || v === "ru" ? v : null; }
+  try { var o = window.__hfVariables; if (o && ok(o.lang)) return o.lang; } catch (e) {}
+  try { var v = window.__hyperframes.getVariables(); if (v && ok(v.lang)) return v.lang; } catch (e) {}
+  try {
+    var d = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]");
+    for (var i = 0; i < d.length; i++) if (d[i].id === "lang" && ok(d[i]["default"])) return d[i]["default"];
+  } catch (e) {}
+  return "ru";
+})();
+function ease3(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
+/* build an odometer inside host. opts: n digits, cw, ch, fs, sep ("" gap | ","), hideLead */
+function makeOdo(host, o) {
+  var n = o.n, drums = [], seps = [];
+  host.classList.add("od-row");
+  for (var k = n - 1; k >= 0; k--) {
+    var d = document.createElement("div");
+    d.className = "od-drum";
+    d.style.cssText = "width:" + o.cw + "px;height:" + o.ch + "px;font-size:" + o.fs + "px;line-height:" + o.ch + "px";
+    var s = document.createElement("div");
+    s.className = "od-strip";
+    var h = "";
+    for (var i = 0; i < 2; i++) h += '<div class="od-cell" style="height:' + o.ch + 'px">' + (i % 10) + "</div>";
+    s.innerHTML = h; s.setAttribute("data-layout-allow-occlusion", ""); s.children[0].setAttribute("data-layout-allow-occlusion", ""); s.children[1].setAttribute("data-layout-allow-occlusion", "");
+    d.appendChild(s);
+    host.appendChild(d);
+    drums[k] = { d: d, s: s, a: s.children[0], b: s.children[1] };
+    if (k > 0 && k % 3 === 0) {
+      var sp = document.createElement("div");
+      sp.className = "od-sep";
+      sp.style.cssText = "width:" + (o.sep ? o.cw * 0.3 : o.cw * 0.2) + "px;height:" + o.ch + "px;font-size:" + (o.fs * 0.8) + "px;line-height:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:" + (o.ch * 0.1) + "px";
+      sp.textContent = o.sep || "";
+      host.appendChild(sp);
+      seps[k] = sp;
+    }
+  }
+  function pos(k, v) {
+    var x = v / Math.pow(10, k), fl = Math.floor(x), fr = x - fl;
+    if (k === 0) return x;
+    var t = 1 - 1 / Math.pow(10, k);
+    return fl + ease3((fr - t) / (1 - t));
+  }
+  return {
+    drums: drums, el: host,
+    /* v1 = value now, v0 = value a moment earlier (for blur) */
+    draw: function (v1, v0, hl) {
+      for (var k = 0; k < n; k++) {
+        var p1 = pos(k, v1), p0 = pos(k, v0);
+        var m = ((p1 % 10) + 10) % 10;
+        var dr = drums[k];
+        var blur = Math.min(9, Math.abs(p1 - p0) * o.ch * 0.45);
+        var ii = Math.floor(m), ff = m - ii;
+        var ta = String(ii % 10), tb = String((ii + 1) % 10);
+        if (dr.a.textContent !== ta) dr.a.textContent = ta;
+        if (dr.b.textContent !== tb) dr.b.textContent = tb;
+        dr.b.style.visibility = ff > 0.003 ? "visible" : "hidden";
+        dr.s.style.transform = "translateY(" + (-ff * o.ch).toFixed(2) + "px)";
+        dr.s.style.filter = blur > 0.4 ? "blur(" + blur.toFixed(1) + "px)" : "none";
+        var lead = o.hideLead && k > 0 && Math.floor(v1 / Math.pow(10, k)) === 0;
+        dr.d.style.visibility = lead ? "hidden" : "visible";
+        dr.d.classList.toggle("od-hl", !!hl);
+        if (seps[k]) seps[k].style.visibility = (o.hideLead && Math.floor(v1 / Math.pow(10, k)) === 0) ? "hidden" : "visible";
+      }
+    }
+  };
+}
+/* pure value function from ticks: base + sum of eased steps. steps: [{t,dur,add}] */
+function stepsValue(base, steps, t) {
+  var v = base;
+  for (var i = 0; i < steps.length; i++) {
+    var s = steps[i];
+    var x = (t - s.t) / s.dur;
+    if (x <= 0) continue;
+    v += s.add * (x >= 1 ? 1 : 1 - Math.pow(1 - x, 3));
+  }
+  return v;
+}
+function beatRot(t, deg, P, dur) {
+  P = P || 0.5; dur = dur || 0.18;
+  var k = Math.floor(Math.max(0, t) / P), f = (t - k * P) / dur;
+  return (k + (f >= 1 ? 1 : 1 - Math.pow(1 - f, 3))) * deg;
+}
+function makeDial(el, size, color) {
+  var r = size / 2, s = '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + " " + size + '">';
+  for (var i = 0; i < 60; i++) {
+    var a = i * 6 * Math.PI / 180, big = i % 5 === 0, r1 = r - 4, r2 = r - (big ? 34 : 18);
+    s += '<line x1="' + (r + Math.sin(a) * r1).toFixed(1) + '" y1="' + (r - Math.cos(a) * r1).toFixed(1) + '" x2="' + (r + Math.sin(a) * r2).toFixed(1) + '" y2="' + (r - Math.cos(a) * r2).toFixed(1) + '" stroke="' + color + '" stroke-width="' + (big ? 6 : 3) + '" stroke-linecap="round"/>';
+  }
+  el.innerHTML = s + "</svg>";
+}
+function pickLang() {
+  var els = document.querySelectorAll("[data-l]");
+  for (var i = 0; i < els.length; i++) if (els[i].getAttribute("data-l") !== HF_LANG) els[i].style.display = "none";
+}
+
+(function () {
+  var sp = HF_LANG === "en" ? "," : " ", sf = HF_LANG === "en" ? " days" : " дн."; if (HF_LANG === "en") { var st = document.createElement("style"); st.textContent = ".f6-c{font-size:21px !important}"; document.getElementById("root").appendChild(st); }
+  var D = { ru: { h: "Добавьте их в календарь", ics: "файл .ics", g: "В Google Календарь" }, en: { h: "Add them to your calendar", ics: ".ics file", g: "Add to Google Calendar" } }[HF_LANG];
+  document.getElementById("f6-h").textContent = D.h;
+  document.getElementById("f6-ics").textContent = D.ics;
+  document.getElementById("f6-g").textContent = D.g;
+  pickLang();
+  var nums = ["13" + sp + "300", "13" + sp + "400", "13" + sp + "431"], hits = [4, 14, 22];
+  var gh = "";
+  for (var i = 0; i < 35; i++) gh += '<div class="f6-d">' + ((i % 28) + 1) + "</div>";
+  var g = document.getElementById("f6-grid"); g.innerHTML = gh;
+  var ch = ""; for (var i = 0; i < 3; i++) ch += '<div class="f6-c">' + nums[i] + sf + "</div>";
+  var chips = document.getElementById("f6-chips"); chips.innerHTML = ch;
+  var tl = gsap.timeline({ paused: true });
+  tl.fromTo("#f6-h", { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.7)" }, 0);
+  tl.fromTo("#f6-phone", { x: 500, rotation: 8, opacity: 0 }, { x: 0, rotation: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, 0.1);
+  tl.fromTo("#f6-grid", { opacity: 0, x: -120 }, { opacity: 1, x: 0, duration: 0.6, ease: "power3.out" }, 0.6);
+  for (var k = 0; k < 3; k++) {
+    var cell = g.children[hits[k]], at = 1.5 + k * 0.5;
+    tl.to(cell, { backgroundColor: "#1d4ed8", color: "#ffffff", scale: 1.2, duration: 0.2, ease: "back.out(3)" }, at);
+    tl.to(cell, { scale: 1, duration: 0.2 }, at + 0.2);
+    tl.fromTo(chips.children[k], { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)" }, at + 0.1);
+  }
+  tl.fromTo("#f6-ics", { opacity: 0, x: -100 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 3.4);
+  tl.fromTo("#f6-g", { opacity: 0, x: -100 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 4.2);
+  tl.fromTo("#f6-phone", { scale: 1 }, { scale: 1.03, duration: 0.4, ease: "power1.inOut", transformOrigin: "50% 50%", immediateRender: false }, 5.6);
+  window.__timelines["06-export"] = tl;
+})();
+</script>
+</div>
+</template>

@@ -1,0 +1,181 @@
+<template>
+<div id="root" data-composition-id="03-jubilees" data-start="0" data-duration="11.5" data-width="1080" data-height="1080">
+<style>
+@font-face{font-family:"DJV";src:url("assets/fonts/DejaVuSans.ttf");font-weight:400}
+@font-face{font-family:"DJV";src:url("assets/fonts/DejaVuSans-Bold.ttf");font-weight:700}
+@font-face{font-family:"DJVM";src:url("assets/fonts/DejaVuSansMono-Bold.ttf");font-weight:700}
+#root{font-family:"DJV",sans-serif;color:#182033;overflow:hidden}
+.bg{position:absolute;left:0;top:0;width:1080px;height:1080px;background:radial-gradient(ellipse at 50% 30%,#ffffff 0%,#eef2fb 55%,#e1e8f8 100%)}
+.bg:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(29,78,216,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(29,78,216,.05) 1px,transparent 1px);background-size:54px 54px}
+.od-row{display:flex;align-items:flex-start;padding:14px;background:#0d1530;border-radius:26px;box-shadow:0 18px 50px rgba(24,32,51,.35),inset 0 0 0 4px #1d4ed8}
+.od-drum{position:relative;overflow:hidden;background:#182033;border-radius:10px;margin:0 3px;font-family:"DJVM",monospace;font-weight:700;color:#fff;text-align:center;transition:none}
+.od-strip{position:absolute;left:0;top:0;width:100%;will-change:transform}
+.od-cell{width:100%;text-align:center}
+.od-drum:after{content:"";pointer-events:none;position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.75) 0%,rgba(0,0,0,0) 28%,rgba(0,0,0,0) 72%,rgba(0,0,0,.75) 100%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.07)}
+.od-drum.od-hl{color:#ffc53d}
+.od-sep{color:#ffc53d;font-family:"DJVM",monospace;font-weight:700;text-align:center;align-self:flex-start}
+.phone{position:absolute;background:#0d1530;border-radius:54px;padding:14px;box-shadow:0 30px 70px rgba(24,32,51,.35)}
+.phone .scr{position:relative;overflow:hidden;border-radius:42px;background:#f4f6fb}
+.phone img{position:absolute;left:0;top:0;display:block}
+.pill{position:absolute;display:inline-block;padding:12px 30px;border-radius:100px;font-weight:700;white-space:nowrap}
+.h1{position:absolute;left:60px;width:960px;font-weight:700;font-size:78px;line-height:1.08;letter-spacing:-1px;color:#182033}
+.kick{position:absolute;left:0;width:1080px;text-align:center;font-weight:700;font-size:34px;letter-spacing:5px;color:#1d4ed8}
+.blue{color:#1d4ed8}.red{color:#b42318}
+
+#f3-dial{position:absolute;left:-120px;top:380px;width:1320px;height:1320px;opacity:.35}
+#f3-h{top:56px;text-align:center;left:20px;width:1040px;font-size:62px}
+#f3-phone{left:326px;top:380px;width:400px;transform-origin:0 0}
+#f3-phone .scr{width:400px;height:865px}
+#f3-phone img{width:400px;height:865px}
+.f3-ring{position:absolute;border:6px solid #b42318;border-radius:16px;opacity:0;box-shadow:0 0 0 8px rgba(180,35,24,.15)}
+.f3-card{position:absolute;left:520px;width:510px;background:#fff;border:3px solid #b9c4d8;border-radius:28px;box-shadow:0 10px 30px rgba(24,32,51,.12);display:flex;flex-direction:column;align-items:center}
+.f3-lab{align-self:flex-start;margin:18px 0 0 28px;font-weight:700;font-size:30px;letter-spacing:4px;color:#4a5568}
+.f3-ow{display:flex;justify-content:center;width:100%}
+#f3-soon{left:520px;top:752px;font-size:44px;background:#b42318;color:#fff}
+.f3-chip{position:absolute;top:850px;padding:10px 26px;border-radius:100px;font-weight:700;font-size:36px;background:#e8eefc;color:#1e3a8a;border:3px solid #b9c4d8;white-space:nowrap}
+</style>
+<div class="bg clip" data-start="0" data-duration="11.5" data-track-index="0"></div>
+<div id="f3-dial"></div>
+<div id="f3-h" class="h1"></div>
+<div id="f3-phone" class="phone"><div class="scr">
+  <img data-l="ru" src="assets/ru/calendar.png"><img data-l="en" src="assets/en/calendar.png">
+  <div id="f3-r" class="f3-ring" style="left:30px;top:494px;width:340px;height:122px"></div>
+</div></div>
+<div id="f3-ca" class="f3-card" style="top:180px;height:262px"><div id="f3-la" class="f3-lab"></div><div class="f3-ow" style="margin-top:14px"><div id="f3-oa"></div></div></div>
+<div id="f3-cb" class="f3-card" style="top:472px;height:250px"><div id="f3-lb" class="f3-lab"></div><div class="f3-ow" style="margin-top:14px"><div id="f3-ob"></div></div></div>
+<span id="f3-soon" class="pill"></span>
+<span id="f3-c1" class="f3-chip" style="left:520px">&times;100</span>
+<span id="f3-c2" class="f3-chip" style="left:690px">&times;1000</span>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+/* shared odometer lib (inlined into each frame by build-frames.mjs) */
+var HF_LANG = (function () {
+  function ok(v) { return v === "en" || v === "ru" ? v : null; }
+  try { var o = window.__hfVariables; if (o && ok(o.lang)) return o.lang; } catch (e) {}
+  try { var v = window.__hyperframes.getVariables(); if (v && ok(v.lang)) return v.lang; } catch (e) {}
+  try {
+    var d = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]");
+    for (var i = 0; i < d.length; i++) if (d[i].id === "lang" && ok(d[i]["default"])) return d[i]["default"];
+  } catch (e) {}
+  return "ru";
+})();
+function ease3(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
+/* build an odometer inside host. opts: n digits, cw, ch, fs, sep ("" gap | ","), hideLead */
+function makeOdo(host, o) {
+  var n = o.n, drums = [], seps = [];
+  host.classList.add("od-row");
+  for (var k = n - 1; k >= 0; k--) {
+    var d = document.createElement("div");
+    d.className = "od-drum";
+    d.style.cssText = "width:" + o.cw + "px;height:" + o.ch + "px;font-size:" + o.fs + "px;line-height:" + o.ch + "px";
+    var s = document.createElement("div");
+    s.className = "od-strip";
+    var h = "";
+    for (var i = 0; i < 2; i++) h += '<div class="od-cell" style="height:' + o.ch + 'px">' + (i % 10) + "</div>";
+    s.innerHTML = h; s.setAttribute("data-layout-allow-occlusion", ""); s.children[0].setAttribute("data-layout-allow-occlusion", ""); s.children[1].setAttribute("data-layout-allow-occlusion", "");
+    d.appendChild(s);
+    host.appendChild(d);
+    drums[k] = { d: d, s: s, a: s.children[0], b: s.children[1] };
+    if (k > 0 && k % 3 === 0) {
+      var sp = document.createElement("div");
+      sp.className = "od-sep";
+      sp.style.cssText = "width:" + (o.sep ? o.cw * 0.3 : o.cw * 0.2) + "px;height:" + o.ch + "px;font-size:" + (o.fs * 0.8) + "px;line-height:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:" + (o.ch * 0.1) + "px";
+      sp.textContent = o.sep || "";
+      host.appendChild(sp);
+      seps[k] = sp;
+    }
+  }
+  function pos(k, v) {
+    var x = v / Math.pow(10, k), fl = Math.floor(x), fr = x - fl;
+    if (k === 0) return x;
+    var t = 1 - 1 / Math.pow(10, k);
+    return fl + ease3((fr - t) / (1 - t));
+  }
+  return {
+    drums: drums, el: host,
+    /* v1 = value now, v0 = value a moment earlier (for blur) */
+    draw: function (v1, v0, hl) {
+      for (var k = 0; k < n; k++) {
+        var p1 = pos(k, v1), p0 = pos(k, v0);
+        var m = ((p1 % 10) + 10) % 10;
+        var dr = drums[k];
+        var blur = Math.min(9, Math.abs(p1 - p0) * o.ch * 0.45);
+        var ii = Math.floor(m), ff = m - ii;
+        var ta = String(ii % 10), tb = String((ii + 1) % 10);
+        if (dr.a.textContent !== ta) dr.a.textContent = ta;
+        if (dr.b.textContent !== tb) dr.b.textContent = tb;
+        dr.b.style.visibility = ff > 0.003 ? "visible" : "hidden";
+        dr.s.style.transform = "translateY(" + (-ff * o.ch).toFixed(2) + "px)";
+        dr.s.style.filter = blur > 0.4 ? "blur(" + blur.toFixed(1) + "px)" : "none";
+        var lead = o.hideLead && k > 0 && Math.floor(v1 / Math.pow(10, k)) === 0;
+        dr.d.style.visibility = lead ? "hidden" : "visible";
+        dr.d.classList.toggle("od-hl", !!hl);
+        if (seps[k]) seps[k].style.visibility = (o.hideLead && Math.floor(v1 / Math.pow(10, k)) === 0) ? "hidden" : "visible";
+      }
+    }
+  };
+}
+/* pure value function from ticks: base + sum of eased steps. steps: [{t,dur,add}] */
+function stepsValue(base, steps, t) {
+  var v = base;
+  for (var i = 0; i < steps.length; i++) {
+    var s = steps[i];
+    var x = (t - s.t) / s.dur;
+    if (x <= 0) continue;
+    v += s.add * (x >= 1 ? 1 : 1 - Math.pow(1 - x, 3));
+  }
+  return v;
+}
+function beatRot(t, deg, P, dur) {
+  P = P || 0.5; dur = dur || 0.18;
+  var k = Math.floor(Math.max(0, t) / P), f = (t - k * P) / dur;
+  return (k + (f >= 1 ? 1 : 1 - Math.pow(1 - f, 3))) * deg;
+}
+function makeDial(el, size, color) {
+  var r = size / 2, s = '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + " " + size + '">';
+  for (var i = 0; i < 60; i++) {
+    var a = i * 6 * Math.PI / 180, big = i % 5 === 0, r1 = r - 4, r2 = r - (big ? 34 : 18);
+    s += '<line x1="' + (r + Math.sin(a) * r1).toFixed(1) + '" y1="' + (r - Math.cos(a) * r1).toFixed(1) + '" x2="' + (r + Math.sin(a) * r2).toFixed(1) + '" y2="' + (r - Math.cos(a) * r2).toFixed(1) + '" stroke="' + color + '" stroke-width="' + (big ? 6 : 3) + '" stroke-linecap="round"/>';
+  }
+  el.innerHTML = s + "</svg>";
+}
+function pickLang() {
+  var els = document.querySelectorAll("[data-l]");
+  for (var i = 0; i < els.length; i++) if (els[i].getAttribute("data-l") !== HF_LANG) els[i].style.display = "none";
+}
+
+(function () {
+  var D = { ru: { h: "Юбилеи в днях и часах", la: "ДНЕЙ", lb: "ЧАСОВ", soon: "скоро", sep: "" }, en: { h: "Jubilees in days and hours", la: "DAYS", lb: "HOURS", soon: "soon", sep: "," } }[HF_LANG];
+  document.getElementById("f3-h").textContent = D.h;
+  document.getElementById("f3-la").textContent = D.la;
+  document.getElementById("f3-lb").textContent = D.lb;
+  document.getElementById("f3-soon").textContent = D.soon;
+  pickLang();
+  makeDial(document.getElementById("f3-dial"), 1320, "#1d4ed8");
+  var oa = makeOdo(document.getElementById("f3-oa"), { n: 5, cw: 78, ch: 118, fs: 98, sep: D.sep });
+  var ob = makeOdo(document.getElementById("f3-ob"), { n: 6, cw: 66, ch: 100, fs: 82, sep: D.sep, hideLead: true });
+  var sa = [{ t: 1.7, dur: 0.35, add: 2 }, { t: 2.3, dur: 1.3, add: 700 }, { t: 3.8, dur: 1.1, add: 1000 }];
+  var sb = [{ t: 5.0, dur: 2.0, add: 400000 }];
+  var proxy = { t: 0 };
+  function render() {
+    var t = proxy.t;
+    oa.draw(stepsValue(13298, sa, t), stepsValue(13298, sa, t - 0.03), t > 5.0);
+    ob.draw(stepsValue(0, sb, t), stepsValue(0, sb, t - 0.03), t > 7.1);
+    document.getElementById("f3-dial").style.transform = "rotate(" + beatRot(t, 6, 0.5, 0.2).toFixed(2) + "deg)";
+  }
+  var tl = gsap.timeline({ paused: true });
+  tl.to(proxy, { t: 11, duration: 11, ease: "none", onUpdate: render }, 0);
+  tl.fromTo("#f3-h", { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.7)" }, 0.1);
+  tl.fromTo("#f3-phone", { x: 0, y: 0, scale: 1 }, { x: -238, y: -170, scale: 0.85, duration: 0.8, ease: "power3.inOut" }, 0.2);
+  tl.fromTo("#f3-ca", { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: 0.6, ease: "power3.out" }, 1.1);
+  tl.fromTo("#f3-cb", { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: 0.6, ease: "power3.out" }, 4.6);
+  tl.fromTo("#f3-soon", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2.4)", transformOrigin: "0 50%" }, 7.4);
+  tl.fromTo("#f3-r", { opacity: 0, scale: 1.1 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, 7.5);
+  tl.fromTo("#f3-c1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(2)" }, 8.5);
+  tl.fromTo("#f3-c2", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(2)" }, 9.0);
+  render();
+  window.__timelines["03-jubilees"] = tl;
+})();
+</script>
+</div>
+</template>

@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #f04-remember {
+          position: absolute;
+          inset: 0;
+          font-family: Inter, system-ui, sans-serif;
+          color: #1d2233;
+          overflow: hidden;
+        }
+        #f04-glow {
+          position: absolute;
+          left: -200px;
+          top: 200px;
+          width: 800px;
+          height: 800px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(255, 190, 70, 0.45), rgba(255, 150, 60, 0.1) 50%, rgba(255, 150, 60, 0) 70%);
+          opacity: 0;
+        }
+        #f04-phone {
+          position: absolute;
+          left: 70px;
+          top: 150px;
+          width: 440px;
+          height: 800px;
+          border-radius: 58px;
+          background: #1d2233;
+          padding: 14px;
+          box-shadow: 0 30px 70px rgba(120, 80, 20, 0.3);
+        }
+        #f04-screen {
+          position: relative;
+          width: 412px;
+          height: 772px;
+          border-radius: 46px;
+          overflow: hidden;
+          background: #f4f6fb;
+        }
+        #f04-img {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 412px;
+          height: auto;
+        }
+        #f04-text {
+          position: absolute;
+          left: 560px;
+          top: 170px;
+          width: 470px;
+        }
+        .f04-h {
+          font-size: 66px;
+          line-height: 1.06;
+          font-weight: 800;
+          letter-spacing: -0.03em;
+          opacity: 0;
+        }
+        .f04-h em {
+          font-style: normal;
+          color: #c24e08;
+        }
+        .f04-p {
+          margin-top: 26px;
+          font-size: 44px;
+          line-height: 1.16;
+          font-weight: 600;
+          color: #4a4a58;
+          opacity: 0;
+        }
+        .f04-chip {
+          display: inline-block;
+          margin-top: 22px;
+          padding: 12px 24px; white-space: nowrap;
+          border-radius: 999px;
+          background: #fffdf8;
+          border: 3px solid #ffb020;
+          box-shadow: 0 8px 22px rgba(160, 100, 20, 0.2);
+          font-size: 31px;
+          font-weight: 700;
+          opacity: 0;
+        }
+      </style>
+
+      <div id="f04-remember" data-composition-id="f04-remember" data-width="1080" data-height="1080">
+        <div id="f04-w" style="position: absolute; inset: 0">
+          <div id="f04-glow"></div>
+          <div id="f04-phone">
+            <div id="f04-screen"><img data-layout-allow-overflow id="f04-img" alt="" src="assets/ru/form.png" /></div>
+          </div>
+          <div id="f04-text">
+            <div id="f04-h" class="f04-h"></div>
+            <div id="f04-p" class="f04-p"></div>
+            <div><span id="f04-c1" class="f04-chip"></span></div>
+            <div><span id="f04-c2" class="f04-chip"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          var vars = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+          var L = (window.__hfLang || vars.lang) === "en" ? "en" : "ru";
+          var T = {
+            ru: { h: "Введите дату <em>один раз</em>.", p: "Дальше календарь открывается сразу.", c1: "Работает без интернета", c2: "Ставится на телефон" },
+            en: { h: "Enter your date <em>once</em>.", p: "Next time the calendar opens right away.", c1: "Works offline", c2: "Installs on your phone" },
+          }[L];
+          document.getElementById("f04-h").innerHTML = T.h;
+          document.getElementById("f04-p").textContent = T.p;
+          document.getElementById("f04-c1").textContent = T.c1;
+          document.getElementById("f04-c2").textContent = T.c2;
+          document.getElementById("f04-img").setAttribute("src", "assets/" + L + "/form.png");
+
+          var tl = gsap.timeline({ paused: true });
+          tl.fromTo("#f04-w", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.out" }, 0);
+          tl.to("#f04-w", { opacity: 0, duration: 0.5, ease: "power1.in" }, 8.5);
+          tl.fromTo("#f04-glow", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 1.6, ease: "power2.out" }, 0.2);
+          tl.fromTo("#f04-phone", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 1.0, ease: "power3.out" }, 0.2);
+          tl.fromTo("#f04-img", { y: 0 }, { y: -90, duration: 7, ease: "sine.inOut" }, 1);
+          tl.fromTo("#f04-h", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0.7);
+          tl.fromTo("#f04-p", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 2.2);
+          tl.fromTo("#f04-c1", { opacity: 0, y: 24, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.7)" }, 4.2);
+          tl.fromTo("#f04-c2", { opacity: 0, y: 24, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.7)" }, 5.2);
+
+          window.__timelines["f04-remember"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

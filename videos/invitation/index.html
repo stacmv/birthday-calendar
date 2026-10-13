@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en" data-composition-variables='[{"id":"lang","type":"enum","label":"Language","default":"ru","options":[{"value":"ru","label":"Russian"},{"value":"en","label":"English"}]}]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js" integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2" crossorigin="anonymous"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1080px;
+        overflow: hidden;
+        background: #000;
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1080px;
+        overflow: hidden;
+        background: #E6DAC1;
+      }
+      .scene {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="61"
+      data-width="1080"
+      data-height="1080"
+    >
+      <div
+        id="el-01-envelope"
+        class="scene"
+        data-composition-id="01-envelope"
+        data-composition-src="compositions/frames/01-envelope.html"
+        data-start="0"
+        data-duration="13"
+        data-track-index="0"
+      ></div>
+
+      <div
+        id="el-02-app"
+        class="scene"
+        data-composition-id="02-app"
+        data-composition-src="compositions/frames/02-app.html"
+        data-start="13"
+        data-duration="12.5"
+        data-track-index="1"
+      ></div>
+
+      <div
+        id="el-03-beautiful"
+        class="scene"
+        data-composition-id="03-beautiful"
+        data-composition-src="compositions/frames/03-beautiful.html"
+        data-start="25"
+        data-duration="10.5"
+        data-track-index="0"
+      ></div>
+
+      <div
+        id="el-04-export"
+        class="scene"
+        data-composition-id="04-export"
+        data-composition-src="compositions/frames/04-export.html"
+        data-start="35"
+        data-duration="12.5"
+        data-track-index="1"
+      ></div>
+
+      <div
+        id="el-05-device"
+        class="scene"
+        data-composition-id="05-device"
+        data-composition-src="compositions/frames/05-device.html"
+        data-start="47"
+        data-duration="8.5"
+        data-track-index="0"
+      ></div>
+
+      <div
+        id="el-06-cta"
+        class="scene"
+        data-composition-id="06-cta"
+        data-composition-src="compositions/frames/06-cta.html"
+        data-start="55"
+        data-duration="6"
+        data-track-index="1"
+      ></div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+      // ── frame transitions (injected by transitions.mjs) ──
+      (function () { var tl = window.__timelines["main"];
+        tl.to("#el-02-app", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 25);
+        tl.fromTo("#el-03-beautiful", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 25);
+        tl.to("#el-03-beautiful", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 35);
+        tl.fromTo("#el-04-export", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 35);
+        tl.to("#el-04-export", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 47);
+        tl.fromTo("#el-05-device", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 47);
+        tl.to("#el-05-device", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 55);
+        tl.fromTo("#el-06-cta", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 55);
+        tl.to({}, { duration: 61 }, 0); // full-span anchor — main.duration() == composition total (Studio master duration)
+      })();
+    </script>
+  </body>
+</html>

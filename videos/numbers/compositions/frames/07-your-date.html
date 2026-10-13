@@ -1,0 +1,72 @@
+<template>
+  <style>
+    @font-face { font-family: "Inter"; font-weight: 100 900; src: url("assets/fonts/inter-cyrillic.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+    @font-face { font-family: "Inter"; font-weight: 100 900; src: url("assets/fonts/inter-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Inter", sans-serif; color: #182033; }
+    .n07bg { position: absolute; inset: 0; background: #F4F6FB; }
+    #s7-label { position: absolute; left: 0; right: 0; text-align: center; font-weight: 700; top: 190px; font-size: 54px; color: #1D4ED8; }
+    #s7-label2 { position: absolute; left: 0; right: 0; text-align: center; font-weight: 700; top: 190px; font-size: 54px; color: #1D4ED8; }
+    #s7-date { position: absolute; left: 0; right: 0; top: 440px; text-align: center; font-size: 150px; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .s7c { display: inline-block; }
+    #s7-under { position: absolute; left: 140px; top: 620px; width: 800px; height: 6px; background: #1D4ED8; border-radius: 3px; transform-origin: 0 50%; }
+    #s7-caret { position: absolute; left: 150px; top: 450px; width: 8px; height: 150px; background: #B42318; }
+    .s7r { position: absolute; left: 0; right: 0; text-align: center; font-size: 130px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+    .s7r small { font-size: 46px; font-weight: 600; color: #4A5568; margin-left: 24px; }
+  </style>
+  <div id="root" data-composition-id="07-your-date" data-start="0" data-duration="6" data-width="1080" data-height="1080">
+    <div id="n07-bg" class="n07bg clip" data-start="0" data-duration="6" data-track-index="0"></div>
+    <div id="n07-stage" class="clip" data-start="0" data-duration="6" data-track-index="1" style="position:absolute;inset:0;">
+      <div id="s7-label" data-ru="введите дату рождения" data-en="enter your birth date">введите дату рождения</div>
+      <div id="s7-label2" data-ru="и увидите свои числа" data-en="and see your own numbers">и увидите свои числа</div>
+      <div id="s7-under"></div>
+      <div id="s7-caret"></div>
+      <div id="s7-date"></div>
+      <div class="s7r" data-layout-allow-overlap id="s7-r0" style="top:340px">10 000<small data-ru="дней" data-en="days">дней</small></div>
+      <div class="s7r" data-layout-allow-overlap id="s7-r1" style="top:530px">12 345<small data-ru="дней" data-en="days">дней</small></div>
+      <div class="s7r" data-layout-allow-overlap id="s7-r2" style="top:720px">300 000<small data-ru="часов" data-en="hours">часов</small></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var LANG = (function () {
+        var v = window.__hfVariables;
+        if (v && (v.lang === "en" || v.lang === "ru")) return v.lang;
+        try {
+          var d = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]");
+          for (var i = 0; i < d.length; i++) if (d[i].id === "lang") return d[i]["default"] === "en" ? "en" : "ru";
+        } catch (e) {}
+        return "ru";
+      })();
+      document.querySelectorAll("[data-ru]").forEach(function (e) { e.textContent = LANG === "en" ? e.getAttribute("data-en") : e.getAttribute("data-ru"); });
+      var tl = gsap.timeline({ paused: true });
+      var TXT = "15.05.1990", host = document.getElementById("s7-date");
+      for (var i = 0; i < TXT.length; i++) { var sp = document.createElement("span"); sp.className = "s7c"; sp.setAttribute("data-layout-allow-overlap", ""); sp.id = "s7-c" + i; sp.textContent = TXT.charAt(i); host.appendChild(sp); }
+      gsap.set(["#s7-label2", "#s7-r0", "#s7-r1", "#s7-r2", "#s7-caret"], { opacity: 0 });
+      gsap.set(".s7c", { opacity: 0 });
+      tl.fromTo("#s7-label", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.1);
+      tl.fromTo("#s7-under", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power2.out" }, 0.3);
+      // typing: characters appear on a steady tick, caret follows (approximate glyph advance)
+      var ADV = [0.62,0.62,0.3,0.62,0.62,0.3,0.62,0.62,0.62,0.62].map(function (a) { return a * 150; });
+      var total = 0; ADV.forEach(function (a) { total += a; });
+      var x = 540 - total / 2;
+      tl.set("#s7-caret", { opacity: 1, x: x - 150 }, 0.5);
+      for (var i = 0; i < TXT.length; i++) {
+        var t0 = 0.8 + i * 0.16;
+        tl.set("#s7-c" + i, { opacity: 1 }, t0);
+        x += ADV[i];
+        tl.set("#s7-caret", { x: x - 150 }, t0);
+      }
+      // regroup: the typed date scatters, the label swaps, and your numbers stack in
+      for (var i = 0; i < TXT.length; i++) {
+        tl.to("#s7-c" + i, { y: (i % 2 ? 1 : -1) * 160, x: (i - 4.5) * 60, opacity: 0, rotation: (i - 4.5) * 12, duration: 0.5, ease: "power2.in" }, 2.8 + i * 0.03);
+      }
+      tl.to(["#s7-caret", "#s7-under"], { opacity: 0, duration: 0.2 }, 2.7);
+      tl.to("#s7-label", { opacity: 0, y: -20, duration: 0.25 }, 2.8);
+      tl.fromTo("#s7-label2", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 3.0);
+      [0, 1, 2].forEach(function (k) {
+        tl.fromTo("#s7-r" + k, { opacity: 0, y: 90, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "back.out(1.7)" }, 3.2 + k * 0.5);
+      });
+      window.__timelines["07-your-date"] = tl;
+    })();
+  </script>
+</template>

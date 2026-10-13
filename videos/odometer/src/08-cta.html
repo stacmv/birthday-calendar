@@ -1,0 +1,50 @@
+<template>
+<div id="root" data-composition-id="08-cta" data-start="0" data-duration="6" data-width="1080" data-height="1080">
+<style>
+/*ODO_CSS*/
+#f8-dial{position:absolute;left:-120px;top:-100px;width:1320px;height:1320px;opacity:.3}
+#f8-wrap{position:absolute;left:0;top:130px;width:1080px;display:flex;justify-content:center}
+#f8-icon{position:absolute;left:440px;top:470px;width:200px;height:200px;border-radius:46px;box-shadow:0 16px 40px rgba(24,32,51,.35)}
+#f8-name{position:absolute;left:0;top:700px;width:1080px;text-align:center;font-weight:700;font-size:84px;letter-spacing:-1px}
+#f8-tag{position:absolute;left:0;top:810px;width:1080px;text-align:center;font-weight:700;font-size:40px;color:#4a5568}
+#f8-urlw{position:absolute;left:0;top:890px;width:1080px;text-align:center}
+#f8-url{position:static;font-size:44px;background:#1d4ed8;color:#fff}
+</style>
+<div class="bg clip" data-start="0" data-duration="6" data-track-index="0"></div>
+<div id="f8-dial"></div>
+<div id="f8-wrap"><div id="f8-odo"></div></div>
+<img id="f8-icon" src="assets/icon-512.png">
+<div id="f8-name"></div>
+<div id="f8-tag"></div>
+<div id="f8-urlw"><span id="f8-url" class="pill">anniversary-calendar.hitty-missy.ru</span></div>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+/*ODO_JS*/
+(function () {
+  var D = { ru: { name: "Календарь юбилеев", tag: "Узнайте свои ближайшие юбилеи", sep: "" }, en: { name: "Jubilee Calendar", tag: "Find your upcoming jubilees", sep: "," } }[HF_LANG];
+  document.getElementById("f8-name").textContent = D.name;
+  document.getElementById("f8-tag").textContent = D.tag;
+  makeDial(document.getElementById("f8-dial"), 1320, "#1d4ed8");
+  var odo = makeOdo(document.getElementById("f8-odo"), { n: 5, cw: 130, ch: 200, fs: 164, sep: D.sep });
+  var steps = [];
+  for (var i = 0; i <= 8; i++) steps.push({ t: 0.25 * i - 0.1, dur: 0.22, add: 1 });
+  var proxy = { t: 0 };
+  function render() {
+    var t = proxy.t;
+    odo.draw(stepsValue(12336, steps, t), stepsValue(12336, steps, t - 0.03), t > 2.2);
+    document.getElementById("f8-dial").style.transform = "rotate(" + beatRot(t, 6, 0.5, 0.2).toFixed(2) + "deg)";
+  }
+  var tl = gsap.timeline({ paused: true });
+  tl.to(proxy, { t: 6, duration: 6, ease: "none", onUpdate: render }, 0);
+  tl.fromTo("#f8-wrap", { scale: 1 }, { scale: 1.06, duration: 0.14, ease: "power2.out", transformOrigin: "50% 50%" }, 2.1);
+  tl.to("#f8-wrap", { scale: 1, duration: 0.4, ease: "elastic.out(1,0.5)", transformOrigin: "50% 50%" }, 2.24);
+  tl.fromTo("#f8-icon", { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)", transformOrigin: "50% 50%" }, 2.4);
+  tl.fromTo("#f8-name", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 2.8);
+  tl.fromTo("#f8-tag", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 3.2);
+  tl.fromTo("#f8-urlw", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)", transformOrigin: "50% 50%" }, 3.6);
+  render();
+  window.__timelines["08-cta"] = tl;
+})();
+</script>
+</div>
+</template>

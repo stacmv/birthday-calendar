@@ -1,0 +1,53 @@
+<template>
+<div id="root" data-composition-id="07-offline" data-start="0" data-duration="5" data-width="1080" data-height="1080">
+<style>
+/*ODO_CSS*/
+#f7-dial{position:absolute;left:-120px;top:-120px;width:1320px;height:1320px;opacity:.3}
+#f7-h{top:60px;text-align:center;left:20px;width:1040px;font-size:80px}
+#f7-wifi{position:absolute;left:150px;top:310px;width:360px;height:360px;border-radius:50%;background:#182033;box-shadow:0 20px 50px rgba(24,32,51,.3)}
+#f7-icon{position:absolute;left:630px;top:360px;width:260px;height:260px;border-radius:58px;box-shadow:0 20px 50px rgba(24,32,51,.35)}
+#f7-ok{position:absolute;left:830px;top:340px;width:90px;height:90px;border-radius:50%;background:#059669;border:6px solid #fff}
+.f7-c{position:absolute;left:90px;width:900px;text-align:center;padding:16px 0;border-radius:100px;font-weight:700;font-size:40px}
+</style>
+<div class="bg clip" data-start="0" data-duration="5" data-track-index="0"></div>
+<div id="f7-dial"></div>
+<div id="f7-h" class="h1"></div>
+<div id="f7-wifi">
+<svg width="360" height="360" viewBox="0 0 360 360" fill="none" stroke-linecap="round">
+ <path d="M70 150 A150 150 0 0 1 290 150" stroke="#fff" stroke-width="22"/>
+ <path d="M105 190 A100 100 0 0 1 255 190" stroke="#fff" stroke-width="22"/>
+ <path d="M140 228 A52 52 0 0 1 220 228" stroke="#fff" stroke-width="22"/>
+ <circle cx="180" cy="262" r="14" fill="#fff" stroke="none"/>
+ <path id="f7-slash" d="M80 80 L280 290" stroke="#ff5a4d" stroke-width="26" stroke-dasharray="260" stroke-dashoffset="260"/>
+</svg></div>
+<img id="f7-icon" src="assets/icon-512.png">
+<div id="f7-ok"><svg width="78" height="78" viewBox="0 0 78 78" fill="none"><path d="M18 40 L33 55 L60 24" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<div id="f7-c1" class="f7-c" style="top:720px;background:#1d4ed8;color:#fff"></div>
+<div id="f7-c2" class="f7-c" style="top:810px;background:#fff;color:#182033;border:4px solid #b9c4d8"></div>
+<div id="f7-c3" class="f7-c" style="top:900px;background:#e8eefc;color:#1e3a8a;border:4px solid #b9c4d8;font-size:34px"></div>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+/*ODO_JS*/
+(function () {
+  var D = { ru: { h: "Работает без интернета", c1: "Устанавливается на телефон", c2: "Считает прямо в браузере", c3: "Русский и English · разные темы" }, en: { h: "Works without internet", c1: "Installs on your phone", c2: "Calculated right in the browser", c3: "Russian and English · themes" } }[HF_LANG];
+  document.getElementById("f7-h").textContent = D.h;
+  document.getElementById("f7-c1").textContent = D.c1;
+  document.getElementById("f7-c2").textContent = D.c2;
+  document.getElementById("f7-c3").textContent = D.c3;
+  makeDial(document.getElementById("f7-dial"), 1320, "#1d4ed8");
+  var proxy = { t: 0 };
+  var tl = gsap.timeline({ paused: true });
+  tl.to(proxy, { t: 5, duration: 5, ease: "none", onUpdate: function () { document.getElementById("f7-dial").style.transform = "rotate(" + beatRot(proxy.t, 6, 0.5, 0.2).toFixed(2) + "deg)"; } }, 0);
+  tl.fromTo("#f7-h", { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.7)" }, 0);
+  tl.fromTo("#f7-wifi", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)", transformOrigin: "50% 50%" }, 0.3);
+  tl.to("#f7-slash", { strokeDashoffset: 0, duration: 0.4, ease: "power2.out" }, 1.0);
+  tl.fromTo("#f7-icon", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)", transformOrigin: "50% 50%" }, 1.5);
+  tl.fromTo("#f7-ok", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(3)", transformOrigin: "50% 50%" }, 2.0);
+  tl.fromTo("#f7-c1", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(1.8)" }, 2.3);
+  tl.fromTo("#f7-c2", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(1.8)" }, 2.9);
+  tl.fromTo("#f7-c3", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(1.8)" }, 3.5);
+  window.__timelines["07-offline"] = tl;
+})();
+</script>
+</div>
+</template>

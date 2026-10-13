@@ -1,0 +1,56 @@
+<template>
+  <style>
+    @font-face { font-family: "Inter"; font-weight: 100 900; src: url("assets/fonts/inter-cyrillic.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+    @font-face { font-family: "Inter"; font-weight: 100 900; src: url("assets/fonts/inter-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Inter", sans-serif; color: #182033; }
+    .n09bg { position: absolute; inset: 0; background: #F4F6FB; }
+    #s9-tag { position: absolute; left: 60px; right: 60px; top: 330px; text-align: center; white-space: nowrap; font-size: 74px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; transform-origin: 50% 0; }
+    #s9-tag span { display: block; }
+    #s9-tag span.s9b { color: #1D4ED8; }
+    .s9f { position: absolute; font-size: 64px; font-weight: 800; color: #1D4ED8; opacity: 0.12; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    #s9-icon { position: absolute; left: 440px; top: 430px; width: 200px; height: 200px; border-radius: 44px; }
+    #s9-name { position: absolute; left: 0; right: 0; text-align: center; font-weight: 700; top: 670px; font-size: 80px; font-weight: 800; letter-spacing: -0.02em; }
+    #s9-url { position: absolute; left: 0; right: 0; top: 790px; text-align: center; }
+    #s9-url span { display: inline-block; background: #1D4ED8; color: #fff; font-size: 44px; font-weight: 700; padding: 18px 38px; border-radius: 100px; }
+  </style>
+  <div id="root" data-composition-id="09-finale" data-start="0" data-duration="6" data-width="1080" data-height="1080">
+    <div id="n09-bg" class="n09bg clip" data-start="0" data-duration="6" data-track-index="0"></div>
+    <div id="n09-stage" class="clip" data-start="0" data-duration="6" data-track-index="1" style="position:absolute;inset:0;">
+      <div class="s9f" id="s9-f0" style="left:70px;top:262px">11 111</div>
+      <div class="s9f" id="s9-f1" style="left:760px;top:262px">12 345</div>
+      <div class="s9f" id="s9-f2" style="left:70px;top:950px">12 321</div>
+      <div class="s9f" id="s9-f3" style="left:790px;top:950px">10 000</div>
+      <div class="s9f" id="s9-f4" style="left:410px;top:950px">300 000</div>
+      <div id="s9-tag"><span id="s9-t1" data-ru="У каждого есть свои." data-en="Everyone has their own.">У каждого есть свои.</span><span id="s9-t2" class="s9b" data-ru="Найдите их." data-en="Find yours.">Найдите их.</span></div>
+      <img id="s9-icon" src="assets/icon-512.png" alt="">
+      <div id="s9-name" data-ru="Календарь юбилеев" data-en="Jubilee Calendar">Календарь юбилеев</div>
+      <div id="s9-url"><span>anniversary-calendar.hitty-missy.ru</span></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var LANG = (function () {
+        var v = window.__hfVariables;
+        if (v && (v.lang === "en" || v.lang === "ru")) return v.lang;
+        try {
+          var d = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]");
+          for (var i = 0; i < d.length; i++) if (d[i].id === "lang") return d[i]["default"] === "en" ? "en" : "ru";
+        } catch (e) {}
+        return "ru";
+      })();
+      document.querySelectorAll("[data-ru]").forEach(function (e) { e.textContent = LANG === "en" ? e.getAttribute("data-en") : e.getAttribute("data-ru"); });
+      var tl = gsap.timeline({ paused: true });
+      gsap.set(["#s9-icon", "#s9-name", "#s9-url"], { opacity: 0 });
+      for (var k = 0; k < 5; k++) tl.fromTo("#s9-f" + k, { opacity: 0, y: 30 }, { opacity: 0.12, y: 0, duration: 0.8, ease: "power2.out" }, 0.1 + k * 0.15);
+      for (var k = 0; k < 5; k++) tl.to("#s9-f" + k, { y: (k % 2 ? 1 : -1) * 18, duration: 2.6, ease: "sine.inOut" }, 1.0);
+      tl.fromTo("#s9-t1", { opacity: 0, y: 60, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "power3.out" }, 0.2);
+      tl.fromTo("#s9-t2", { opacity: 0, scale: 0.6, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: "back.out(2)" }, 1.0);
+      // tagline moves up to make room for the call to action
+      tl.to("#s9-tag", { y: -250, scale: 0.62, duration: 0.7, ease: "power3.inOut" }, 2.2);
+      tl.fromTo("#s9-icon", { opacity: 0, scale: 0.4, y: 40 }, { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: "back.out(1.8)" }, 2.6);
+      tl.fromTo("#s9-name", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 3.0);
+      tl.fromTo("#s9-url", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 3.4);
+      window.__timelines["09-finale"] = tl;
+    })();
+  </script>
+</template>

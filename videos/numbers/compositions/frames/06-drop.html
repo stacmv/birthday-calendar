@@ -1,0 +1,57 @@
+<template>
+  <style>
+    @font-face { font-family: "Inter"; font-weight: 100 900; src: url("assets/fonts/inter-cyrillic.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+    @font-face { font-family: "Inter"; font-weight: 100 900; src: url("assets/fonts/inter-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Inter", sans-serif; color: #182033; }
+    .n06bg { position: absolute; inset: 0; background: #1D4ED8; }
+    .s6d { position: absolute; top: 250px; width: 140px; height: 220px; line-height: 220px; text-align: center; font-size: 220px; font-weight: 800; font-variant-numeric: tabular-nums; color: #FFFFFF; letter-spacing: -0.02em; }
+    #s6-hours { position: absolute; left: 0; right: 0; text-align: center; font-weight: 700; top: 520px; font-size: 190px; font-weight: 800; color: #FFFFFF; letter-spacing: -0.02em; }
+    #s6-sub { position: absolute; left: 0; right: 0; text-align: center; font-weight: 700; top: 790px; font-size: 44px; color: #DCE6FF; font-weight: 600; }
+  </style>
+  <div id="root" data-composition-id="06-drop" data-start="0" data-duration="7" data-width="1080" data-height="1080">
+    <div id="n06-bg" class="n06bg clip" data-start="0" data-duration="7" data-track-index="0"></div>
+    <div id="n06-stage" class="clip" data-start="0" data-duration="7" data-track-index="1" style="position:absolute;inset:0;">
+      <div id="s6-num" data-layout-allow-overflow style="position:absolute;inset:0;">
+        <div class="s6d" data-layout-allow-overlap id="s6-d0">3</div><div class="s6d" data-layout-allow-overlap id="s6-d1">0</div><div class="s6d" data-layout-allow-overlap id="s6-d2">0</div><div class="s6d" data-layout-allow-overlap id="s6-d3">0</div><div class="s6d" data-layout-allow-overlap id="s6-d4">0</div><div class="s6d" data-layout-allow-overlap id="s6-d5">0</div>
+      </div>
+      <div id="s6-hours" data-layout-allow-overflow data-ru="часов" data-en="hours">часов</div>
+      <div id="s6-sub" data-ru="юбилеи считаются и в днях, и в часах" data-en="jubilees in days and in hours">юбилеи считаются и в днях, и в часах</div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var LANG = (function () {
+        var v = window.__hfVariables;
+        if (v && (v.lang === "en" || v.lang === "ru")) return v.lang;
+        try {
+          var d = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]");
+          for (var i = 0; i < d.length; i++) if (d[i].id === "lang") return d[i]["default"] === "en" ? "en" : "ru";
+        } catch (e) {}
+        return "ru";
+      })();
+      document.querySelectorAll("[data-ru]").forEach(function (e) { e.textContent = LANG === "en" ? e.getAttribute("data-en") : e.getAttribute("data-ru"); });
+      var tl = gsap.timeline({ paused: true });
+      var SLOT = [90, 230, 370, 570, 710, 850];
+      for (var i = 0; i < 6; i++) gsap.set("#s6-d" + i, { left: SLOT[i], transformOrigin: "50% 100%" });
+      gsap.set("#s6-sub", { opacity: 0 });
+      gsap.set("#s6-hours", { transformOrigin: "50% 100%" });
+      // the number falls as a row, digits a hair apart, and lands with a squash
+      for (var i = 0; i < 6; i++) {
+        var t0 = 0.3 + i * 0.05;
+        tl.fromTo("#s6-d" + i, { y: -700, rotation: (i % 2 ? 1 : -1) * 6 }, { y: 0, rotation: 0, duration: 0.5, ease: "power3.in" }, t0);
+        tl.to("#s6-d" + i, { scaleY: 0.78, scaleX: 1.12, duration: 0.08, ease: "power1.out" }, t0 + 0.5);
+        tl.to("#s6-d" + i, { scaleY: 1, scaleX: 1, duration: 0.5, ease: "elastic.out(1,0.35)" }, t0 + 0.58);
+      }
+      tl.to("#s6-num", { y: 14, duration: 0.07, yoyo: true, repeat: 3, ease: "sine.inOut" }, 0.85);
+      // the word "hours" drops second, harder
+      tl.fromTo("#s6-hours", { y: -900, opacity: 1 }, { y: 0, duration: 0.5, ease: "power3.in" }, 1.7);
+      tl.to("#s6-hours", { scaleY: 0.82, scaleX: 1.08, duration: 0.08 }, 2.2);
+      tl.to("#s6-hours", { scaleY: 1, scaleX: 1, duration: 0.55, ease: "elastic.out(1,0.35)" }, 2.31);
+      tl.to("#n06-stage", { y: 12, duration: 0.07, yoyo: true, repeat: 3, ease: "sine.inOut" }, 2.2);
+      tl.fromTo("#s6-sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 3.6);
+      tl.to("#s6-num", { scale: 1.05, duration: 0.5, ease: "sine.inOut", transformOrigin: "50% 50%" }, 4.8);
+      tl.to("#s6-num", { scale: 1, duration: 0.5, ease: "sine.inOut" }, 5.4);
+      window.__timelines["06-drop"] = tl;
+    })();
+  </script>
+</template>

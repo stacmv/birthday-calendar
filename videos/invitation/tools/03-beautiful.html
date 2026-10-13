@@ -1,0 +1,67 @@
+<template>
+  <style>
+    @font-face { font-family: "Cormorant"; src: url("assets/fonts/Cormorant.ttf"); font-weight: 300 700; font-style: normal; }
+    @font-face { font-family: "Cormorant"; src: url("assets/fonts/Cormorant-Italic.ttf"); font-weight: 300 700; font-style: italic; }
+    @font-face { font-family: "Lora"; src: url("assets/fonts/Lora.ttf"); font-weight: 400 700; font-style: normal; }
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Cormorant", serif; color: #2A2018; font-variant-numeric: lining-nums; }
+    .f3-bg { position: absolute; inset: 0; background:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 .35 0 0 0 0 .27 0 0 0 0 .17 0 0 0 .45 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+      radial-gradient(ellipse at 50% 42%, #EFE6D2 0%, #E2D6BC 55%, #CBBD9C 100%); }
+    .f3-abs { position: absolute; }
+    #f3-title { left: 0; top: 52px; width: 1080px; text-align: center; font-size: 104px; font-weight: 700; line-height: 1; }
+    .f3-crop { left: 220px; top: 200px; width: 640px; height: 192px; border-radius: 24px; background-size: 693px 1500px; background-position: -27px -455px; background-repeat: no-repeat; box-shadow: 0 16px 34px rgba(60,40,10,.28); border: 2px solid #B9C4D8; }
+    #f3-ring { left: 208px; top: 188px; width: 664px; height: 216px; border-radius: 30px; border: 4px solid #B58A3A; box-shadow: 0 0 0 8px rgba(181,138,58,.25); }
+    .f3-t { width: 320px; height: 190px; background: linear-gradient(160deg, #FFFBF1, #F3E9D2); border-radius: 12px; box-shadow: 0 14px 26px rgba(60,40,10,.26), 0 2px 4px rgba(60,40,10,.2); text-align: center; z-index: 2; }
+    .f3-t::before, .f3-t::after { content: ""; position: absolute; top: 50%; width: 26px; height: 26px; margin-top: -13px; border-radius: 50%; background: #E2D6BC; box-shadow: inset 0 2px 4px rgba(60,40,10,.35); }
+    .f3-t::before { left: -13px; } .f3-t::after { right: -13px; }
+    .f3-t i { position: absolute; left: 18px; right: 18px; top: 22px; bottom: 22px; border: 2px solid #B58A3A; border-radius: 6px; }
+    .f3-n { position: absolute; left: 0; right: 0; top: 38px; font-family: "Lora", serif; font-weight: 700; font-size: 64px; line-height: 1; color: #6F1220; white-space: nowrap; }
+    .f3-l { position: absolute; left: 0; right: 0; top: 122px; font-size: 29px; font-style: italic; font-weight: 600; color: #6B5A48; white-space: nowrap; }
+    #f3-note { left: 0; top: 886px; width: 1080px; text-align: center; font-size: 56px; font-style: italic; font-weight: 500; color: #2A2018; }
+  </style>
+
+  <div id="root" data-composition-id="03-beautiful" data-start="0" data-duration="10" data-width="1080" data-height="1080">
+    <div id="f3-bg" class="f3-bg clip" data-start="0" data-duration="10" data-track-index="0"></div>
+    <div id="f3-title" class="f3-abs" data-t="title"></div>
+    <div id="f3-crop-ru" class="f3-abs f3-crop" style="background-image:url(assets/ru-calendar.png)"></div>
+    <div id="f3-crop-en" class="f3-abs f3-crop" style="background-image:url(assets/en-calendar.png)"></div>
+    <div id="f3-ring" class="f3-abs"></div>
+
+    <div id="f3-t1" class="f3-abs f3-t" style="left:30px;top:440px"><i></i><div class="f3-n">11 111</div><div class="f3-l" data-t="l1"></div></div>
+    <div id="f3-t2" class="f3-abs f3-t" style="left:380px;top:440px"><i></i><div class="f3-n">12 345</div><div class="f3-l" data-t="l2"></div></div>
+    <div id="f3-t3" class="f3-abs f3-t" style="left:730px;top:440px"><i></i><div class="f3-n">12 321</div><div class="f3-l" data-t="l3"></div></div>
+    <div id="f3-t4" class="f3-abs f3-t" style="left:205px;top:670px"><i></i><div class="f3-n">15 000</div><div class="f3-l" data-t="l4"></div></div>
+    <div id="f3-t5" class="f3-abs f3-t" style="left:555px;top:670px"><i></i><div class="f3-n">121 212</div><div class="f3-l" data-t="l5"></div></div>
+
+    <div id="f3-note" class="f3-abs" data-t="note"></div>
+  </div>
+
+  <script>
+    (function () {
+      var V = Object.assign({}, window.__hfVariables || {}); if (!V.lang) { try { V = Object.assign(V, (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {}); } catch (e) {} }
+      var L = V.lang === "en" ? "en" : "ru";
+      var D = {
+        ru: { title: "Красивые числа", l1: "повторы", l2: "последовательность", l3: "палиндром", l4: "две цифры и нули", l5: "повторяющиеся пары", note: "по желанию — одной галочкой" },
+        en: { title: "Beautiful numbers", l1: "repeats", l2: "sequence", l3: "palindrome", l4: "two digits and zeros", l5: "repeating pairs", note: "optional — one tick" }
+      }[L];
+      var root = document.querySelector('[data-composition-id="03-beautiful"]');
+      root.querySelectorAll("[data-t]").forEach(function (e) { e.textContent = D[e.getAttribute("data-t")]; });
+      root.querySelector("#f3-crop-" + (L === "ru" ? "en" : "ru")).style.display = "none";
+      var CR = "#f3-crop-" + L;
+      var rot = [-3, 2, -2, 2.5, -2.5];
+      var tl = gsap.timeline({ paused: true });
+
+      tl.fromTo("#f3-title", { opacity: 0, y: -24 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0);
+      tl.fromTo(CR, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0.4);
+      tl.fromTo("#f3-ring", { opacity: 0, scale: 1.1 }, { opacity: 1, scale: 1, duration: 0.5, ease: "power2.out" }, 1.6);
+      tl.to("#f3-ring", { scale: 1.03, duration: 0.4, yoyo: true, repeat: 1, ease: "sine.inOut" }, 2.2);
+      for (var i = 1; i <= 5; i++) {
+        tl.fromTo("#f3-t" + i, { opacity: 0, y: -120, scale: 1.3, rotation: rot[i - 1] * 4 }, { opacity: 1, y: 0, scale: 1, rotation: rot[i - 1], duration: 0.55, ease: "back.out(1.6)" }, 2.8 + (i - 1) * 0.9);
+      }
+      tl.fromTo("#f3-note", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 7.6);
+      tl.to("#f3-t3", { scale: 1.06, duration: 0.5, yoyo: true, repeat: 1, ease: "sine.inOut" }, 8.6);
+
+      window.__timelines["03-beautiful"] = tl;
+    })();
+  </script>
+</template>

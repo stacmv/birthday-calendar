@@ -1,0 +1,10 @@
+{
+  "input_hash": "ab7dfe48dd0f00a8f76388cbd6463415030d301f8e288ca62b0b2ebff55c69b9",
+  "provider": "openrouter",
+  "model": "google/lyria-3-pro-preview",
+  "prompt": "Upbeat retro newsreel swing, playful brass, walking bass and snare brushes, 1940s breaking-news energy, fun and light, punchy ending",
+  "requested_duration_s": 60.0,
+  "source_duration_s": 66.95,
+  "duration_s": 60.0,
+  "created": "2026-10-12T23:33:44Z"
+}

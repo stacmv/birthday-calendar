@@ -1,0 +1,112 @@
+<template>
+  <style>
+    @font-face { font-family: "Liberation Serif"; font-weight: 400; font-style: normal; src: url("assets/fonts/LiberationSerif-Regular.ttf"); }
+    @font-face { font-family: "Liberation Serif"; font-weight: 700; font-style: normal; src: url("assets/fonts/LiberationSerif-Bold.ttf"); }
+    @font-face { font-family: "Liberation Serif"; font-weight: 400; font-style: italic; src: url("assets/fonts/LiberationSerif-Italic.ttf"); }
+    @font-face { font-family: "Liberation Serif"; font-weight: 700; font-style: italic; src: url("assets/fonts/LiberationSerif-BoldItalic.ttf"); }
+    @font-face { font-family: "Liberation Sans"; font-weight: 700; font-style: normal; src: url("assets/fonts/LiberationSans-Bold.ttf"); }
+
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Liberation Serif", serif; color: #1c1915; }
+    .f2-bg { position: absolute; inset: 0; background-color: #efe7d3; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .15 0 0 0 .14 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+      radial-gradient(ellipse at 25% 15%, rgba(255,255,255,0.4), transparent 60%),
+      radial-gradient(ellipse at 85% 95%, rgba(120,90,40,0.16), transparent 60%); }
+    #f2-wrap { position: absolute; inset: 0; }
+    .f2-strip { position: absolute; left: 48px; right: 48px; top: 30px; display: flex; justify-content: space-between; align-items: center;
+      font-family: "Liberation Sans", sans-serif; font-weight: 700; font-size: 20px; letter-spacing: 0.16em; text-transform: uppercase; }
+    .f2-strip b { color: #b42318; border: 3px solid #b42318; padding: 3px 12px; }
+    .f2-rule { position: absolute; left: 48px; right: 48px; top: 74px; border-top: 5px solid #1c1915; border-bottom: 2px solid #1c1915; height: 10px; }
+    .f2-kick { font-family: "Liberation Sans", sans-serif; font-weight: 700; font-size: 24px; letter-spacing: 0.18em; text-transform: uppercase; color: #b42318; }
+    .f2-h { font-weight: 700; line-height: 1.0; letter-spacing: -0.01em; }
+    .f2-deck { font-size: 36px; line-height: 1.2; color: #2b261f; }
+    .f2-ta, .f2-tb { white-space: inherit; }
+    .f2-tb { opacity: 0; }
+    .f2-photo { position: absolute; background: #fbf7ea; padding: 10px 10px 0; box-shadow: 0 14px 30px rgba(40,30,10,0.38), 0 0 0 2px #1c1915; transform-origin: 50% 50%; }
+    .f2-view { position: relative; overflow: hidden; background: #fff; box-shadow: inset 0 0 0 2px #1c1915; }
+    .f2-pan { position: absolute; left: 0; top: 0; width: 100%; }
+    .f2-pan img { display: block; width: 100%; }
+    .f2-pan svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; }
+    .f2-mark { fill: none; stroke: #b42318; stroke-width: 5; stroke-linecap: round; }
+    .f2-cap { font-style: italic; font-size: 22px; line-height: 1.15; padding: 8px 4px 10px; color: #2b261f; }
+    .f2-tape { position: absolute; width: 120px; height: 34px; top: -16px; left: 50%; margin-left: -60px; background: rgba(214,196,140,0.78); transform: rotate(-3deg); box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
+    .f2-tick { position: absolute; left: 48px; right: 48px; bottom: 34px; height: 54px; background: #1c1915; color: #efe7d3; overflow: hidden; }
+    .f2-tick div { position: absolute; left: 0; top: 0; line-height: 54px; white-space: nowrap; font-family: "Liberation Sans", sans-serif; font-weight: 700; font-size: 21px; letter-spacing: 0.16em; text-transform: uppercase; }
+    .f2-stamp { position: absolute; z-index: 6; border: 7px solid #b42318; color: #b42318; font-family: "Liberation Sans", sans-serif; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 20px; border-radius: 8px; background: rgba(239,231,211,0.55); transform-origin: 50% 50%; }
+
+    #f2-col { position: absolute; left: 48px; top: 120px; width: 520px; }
+    #f2-h { font-size: 100px; margin-top: 14px; }
+    .en #f2-h { font-size: 96px; }
+    #f2-deck { margin-top: 28px; font-size: 38px; }
+    .f2-chip { display: block; width: max-content; margin-top: 22px; font-size: 64px; font-weight: 700; background: #1c1915; color: #efe7d3; padding: 2px 22px 8px; transform: rotate(-2deg); transform-origin: 0% 50%; }
+    #f2-c2 { transform: rotate(1.5deg); margin-left: 40px; }
+    #f2-rule2 { margin-top: 26px; width: 0; height: 6px; background: #b42318; }
+
+  </style>
+
+  <div id="root" data-composition-id="02-product" data-width="1080" data-height="1080">
+    <div id="f2-ground" class="clip f2-bg" data-start="0" data-duration="7" data-track-index="0"></div>
+    <div id="f2-wrap">
+      <div class="f2-strip"><span data-t="mast"></span><b data-t="extra"></b></div>
+      <div class="f2-rule"></div>
+      <div id="f2-col">
+        <div class="f2-kick" data-t="kick"></div>
+        <div class="f2-h" id="f2-h"></div>
+        <div id="f2-rule2"></div>
+        <div class="f2-deck" id="f2-deck"></div>
+        <div class="f2-chip" id="f2-c1" data-t="c1" style="margin-top:56px"></div>
+        <div class="f2-chip" id="f2-c2" data-t="c2"></div>
+      </div>
+      <div class="f2-photo" id="f2-ph" style="left:610px;top:140px;width:430px;">
+        <div class="f2-tape"></div>
+        <div class="f2-view" style="width:410px;height:640px;">
+          <div class="f2-pan" id="f2-ph-pan" style="top:0px;"><img id="f2-ph-img" src="assets/ru-form.png" alt=""></div>
+        </div>
+        <div class="f2-cap" data-t="cap"></div>
+      </div>
+      <div class="f2-tick"><div id="f2-tickin">Юбилеи в днях и часах &#9733; Юбилеи в днях и часах &#9733; Юбилеи в днях и часах &#9733; Юбилеи в днях и часах</div></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+
+      const SCOPE = document.querySelector('[data-composition-id="02-product"]');
+      const V = (window.__hyperframes && window.__hyperframes.getVariables) ? window.__hyperframes.getVariables() : {};
+      const V2 = (V && V.lang) ? V : (window.__hfVariables || {}); const LK = Object.keys(V2).filter(function (k) { return k.toLowerCase() === "lang"; })[0]; const lang = LK && String(V2[LK]).toLowerCase() === "en" ? "en" : "ru";
+      const D = {"ru": {"mast": "Вестник юбилеев · стр. 2", "extra": "Экстренный выпуск", "kick": "Главная новость", "h": "Календарь юбилеев", "deck": "Введите дату рождения, а время по желанию. Увидите ближайшие юбилеи в днях и в часах.", "cap": "Один экран: дата и время рождения", "c1": "10 000 дней", "c2": "300 000 часов", "tick": "Юбилеи в днях и часах"}, "en": {"mast": "The Jubilee Times · p. 2", "extra": "Extra edition", "kick": "Top story", "h": "Jubilee Calendar", "deck": "Enter your date of birth; the time is optional. See your upcoming jubilees in days and in hours.", "cap": "One screen: date and time of birth", "c1": "10,000 days", "c2": "300,000 hours", "tick": "Jubilees in days and hours"}}[lang];
+      document.getElementById("f2-wrap").classList.toggle("en", lang === "en");
+      SCOPE.querySelectorAll("[data-t]").forEach(function (el) { el.textContent = D[el.getAttribute("data-t")]; });
+      function typeIn(tl, id, text, at, dur) {
+        const el = SCOPE.querySelector("#" + id);
+        el.innerHTML = '<span class="f2-ta"></span><span class="f2-tb"></span>';
+        const a = el.firstChild, b = el.lastChild; b.textContent = text;
+        const o = { n: 0 };
+        tl.fromTo(o, { n: 0 }, { n: text.length, duration: dur, ease: "none", onUpdate: function () {
+          const k = Math.round(o.n);
+          a.textContent = text.slice(0, k) + (k > 0 && k < text.length ? "|" : "");
+          b.textContent = text.slice(k);
+        } }, at);
+      }
+      const tl = gsap.timeline({ paused: true });
+      const DUR = 7;
+      document.getElementById("f2-tickin").textContent = [D.tick, D.tick, D.tick, D.tick].join(" ★ ");
+      // bottom ticker crawl
+      tl.fromTo("#f2-tickin", { x: 0 }, { x: -700, duration: DUR, ease: "none" }, 0);
+      // page chrome
+      tl.fromTo(".f2-strip", { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 0.1);
+      tl.fromTo(".f2-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.out", transformOrigin: "0% 50%" }, 0.15);
+
+
+      SCOPE.querySelectorAll("img[id$='-img']").forEach(function (im) { if (lang === "en") im.src = im.src.replace("/ru-", "/en-"); });
+
+      typeIn(tl, "f2-h", D.h, 0.6, 1.4);
+      tl.to("#f2-rule2", { width: 300, duration: 0.6, ease: "power2.out" }, 2.0);
+      typeIn(tl, "f2-deck", D.deck, 2.6, 2.6);
+      tl.fromTo("#f2-ph", { y: -700, rotation: -14, opacity: 0 }, { y: 0, rotation: 2, opacity: 1, duration: 0.7, ease: "power3.out" }, 1.0);
+      tl.fromTo("#f2-c1", { x: -120, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "back.out(2)" }, 4.4);
+      tl.fromTo("#f2-c2", { x: -120, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "back.out(2)" }, 5.4);
+      tl.fromTo("#f2-ph-pan", { y: 0 }, { y: -40, duration: 5.5, ease: "none" }, 1.5);
+
+      window.__timelines["02-product"] = tl;
+    })();
+  </script>
+</template>

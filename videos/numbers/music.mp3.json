@@ -1,0 +1,10 @@
+{
+  "input_hash": "4f1ebf198c01b4a40f830e69b671de0e3512a4951412291086ebeb2798f4ac25",
+  "provider": "openrouter",
+  "model": "google/lyria-3-pro-preview",
+  "prompt": "Playful minimal quirky music, pizzicato plucks, marimba and light quirky percussion, clever and witty, numbers dancing, bright clean ending",
+  "requested_duration_s": 62.0,
+  "source_duration_s": 66.59,
+  "duration_s": 62.0,
+  "created": "2026-10-12T23:41:31Z"
+}

@@ -1,0 +1,81 @@
+<template>
+  <style>
+    @font-face { font-family: "Liberation Serif"; font-weight: 400; font-style: normal; src: url("assets/fonts/LiberationSerif-Regular.ttf"); }
+    @font-face { font-family: "Liberation Serif"; font-weight: 700; font-style: normal; src: url("assets/fonts/LiberationSerif-Bold.ttf"); }
+    @font-face { font-family: "Liberation Serif"; font-weight: 700; font-style: italic; src: url("assets/fonts/LiberationSerif-BoldItalic.ttf"); }
+    @font-face { font-family: "Liberation Sans"; font-weight: 700; font-style: normal; src: url("assets/fonts/LiberationSans-Bold.ttf"); }
+
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Liberation Serif", serif; color: #1c1915; }
+    .f7-desk { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, #3a332b 0%, #1d1a17 70%, #100e0c 100%); }
+    #f7-wrap { position: absolute; inset: 0; }
+    #f7-sheet { position: absolute; left: 70px; top: 60px; width: 940px; height: 960px; background: #efe7d3; box-shadow: 0 30px 70px rgba(0,0,0,0.65), 0 0 0 1px rgba(0,0,0,0.3); transform-origin: 50% 50%; }
+    .f7-in { position: absolute; inset: 0; padding: 40px 54px; text-align: center; }
+    .f7-kick { font-family: "Liberation Sans", sans-serif; font-weight: 700; font-size: 26px; letter-spacing: 0.2em; text-transform: uppercase; color: #b42318; }
+    .f7-rule { border-top: 5px solid #1c1915; border-bottom: 2px solid #1c1915; height: 10px; margin: 12px 0 0; }
+    #f7-h { font-weight: 700; font-size: 88px; line-height: 1.0; margin-top: 30px; letter-spacing: -0.01em; }
+    .en #f7-h { font-size: 96px; }
+    .f7-ta, .f7-tb { white-space: inherit; }
+    .f7-tb { opacity: 0; }
+    #f7-brand { display: flex; align-items: center; justify-content: center; gap: 26px; margin-top: 34px; }
+    #f7-icon { width: 120px; height: 120px; border-radius: 26px; box-shadow: 0 6px 16px rgba(0,0,0,0.35); }
+    #f7-name { font-weight: 700; font-style: italic; font-size: 76px; }
+    #f7-url { position: absolute; left: 54px; right: 54px; bottom: 56px; border: 6px solid #1c1915; background: #1c1915; color: #efe7d3; padding: 18px 10px 22px; font-weight: 700; font-size: 45px; letter-spacing: 0.01em; white-space: nowrap; }
+    #f7-url span { color: #efe7d3; }
+    #f7-ul { position: absolute; left: 54px; right: 54px; bottom: 46px; height: 8px; background: #b42318; transform-origin: 0% 50%; }
+    #f7-stamp { position: absolute; z-index: 6; right: 30px; top: 560px; border: 10px solid #b42318; color: #b42318; font-family: "Liberation Sans", sans-serif; font-weight: 700; font-size: 56px; line-height: 1.05; letter-spacing: 0.08em; text-transform: uppercase; padding: 12px 26px; border-radius: 10px; background: rgba(239,231,211,0.6); text-align: center; transform-origin: 50% 50%; }
+  </style>
+
+  <div id="root" data-composition-id="07-cta" data-width="1080" data-height="1080">
+    <div id="f7-ground" class="clip f7-desk" data-start="0" data-duration="10" data-track-index="0"></div>
+    <div id="f7-wrap">
+      <div id="f7-sheet">
+        <div class="f7-in">
+          <div class="f7-kick" data-t="kick"></div>
+          <div class="f7-rule"></div>
+          <div id="f7-h"></div>
+          <div id="f7-brand"><img id="f7-icon" src="assets/icon-512.png" alt=""><span id="f7-name" data-t="name"></span></div>
+        </div>
+        <div id="f7-url"></div>
+        <div id="f7-ul"></div>
+      </div>
+      <div id="f7-stamp" data-t="stamp"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const SCOPE = document.querySelector('[data-composition-id="07-cta"]');
+      const V = (window.__hyperframes && window.__hyperframes.getVariables) ? window.__hyperframes.getVariables() : {};
+      const V2 = (V && V.lang) ? V : (window.__hfVariables || {}); const LK = Object.keys(V2).filter(function (k) { return k.toLowerCase() === "lang"; })[0]; const lang = LK && String(V2[LK]).toLowerCase() === "en" ? "en" : "ru";
+      const D = {
+        ru: { kick: "Экстренный выпуск", h: "Узнайте свои ближайшие юбилеи", name: "Календарь юбилеев", stamp: "Узнай<br>сегодня" },
+        en: { kick: "Extra edition", h: "See your next jubilees", name: "Jubilee Calendar", stamp: "Read it<br>today" }
+      }[lang];
+      document.getElementById("f7-wrap").classList.toggle("en", lang === "en");
+      SCOPE.querySelectorAll("[data-t]").forEach(function (el) { el.innerHTML = D[el.getAttribute("data-t")]; });
+      function typeIn(tl, id, text, at, dur) {
+        const el = SCOPE.querySelector("#" + id);
+        el.innerHTML = '<span class="f7-ta"></span><span class="f7-tb"></span>';
+        const a = el.firstChild, b = el.lastChild; b.textContent = text;
+        const o = { n: 0 };
+        tl.fromTo(o, { n: 0 }, { n: text.length, duration: dur, ease: "none", onUpdate: function () {
+          const k = Math.round(o.n);
+          a.textContent = text.slice(0, k) + (k > 0 && k < text.length ? "|" : "");
+          b.textContent = text.slice(k);
+        } }, at);
+      }
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#f7-sheet", { scale: 0.92, rotation: -5, y: 40 }, { scale: 1, rotation: -1, y: 0, duration: 0.7, ease: "back.out(1.6)" }, 0);
+      tl.fromTo("#f7-wrap", { scale: 1 }, { scale: 1.03, duration: 9, ease: "none" }, 0.7);
+      tl.fromTo(".f7-kick", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0.2);
+      tl.fromTo(".f7-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.out", transformOrigin: "50% 50%" }, 0.3);
+      typeIn(tl, "f7-h", D.h, 0.8, 1.6);
+      tl.fromTo("#f7-brand", { opacity: 0, y: 30, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(2)" }, 2.6);
+      tl.fromTo("#f7-stamp", { scale: 3.4, opacity: 0, rotation: -28 }, { scale: 1, opacity: 1, rotation: -11, duration: 0.28, ease: "power4.in" }, 3.8);
+      tl.fromTo("#f7-url", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 4.8);
+      typeIn(tl, "f7-url", "anniversary-calendar.hitty-missy.ru", 5.0, 1.4);
+      tl.fromTo("#f7-ul", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power2.out" }, 6.6);
+      window.__timelines["07-cta"] = tl;
+    })();
+  </script>
+</template>

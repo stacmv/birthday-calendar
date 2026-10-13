@@ -1,0 +1,10 @@
+{
+  "input_hash": "695916eb1d0c14a9b5123d1e3f0293a0399028fec2440a08be0f46f34d4a4ca6",
+  "provider": "openrouter",
+  "model": "google/lyria-3-pro-preview",
+  "prompt": "Elegant light chamber music, strings pizzicato and soft piano, celebratory but refined, like opening an invitation to a special day, gentle build, warm graceful ending",
+  "requested_duration_s": 61.0,
+  "source_duration_s": 66.51,
+  "duration_s": 61.0,
+  "created": "2026-10-12T23:21:33Z"
+}

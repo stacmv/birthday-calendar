@@ -60,6 +60,13 @@ launches a browser (`make test-e2e`, `make landing-screenshots`) runs inside WSL
 `make landing-screenshots` recaptures `public/shots/` only when `public/app` or the shared theme files changed
 (hash in `scripts/.shots.hash`); `FORCE=1` recaptures anyway. Commit the PNGs and the hash file.
 
+## Promo videos
+
+The landing shows one of five ~60 s promo videos at random (`public/shared/promo.js`), in the page's language,
+muted autoplay (no autoplay under `prefers-reduced-motion`). Sources live in `videos/` (HyperFrames compositions,
+see `videos/README.md`); masters are rendered inside WSL. `make promo-videos` muxes the music and writes the
+720×720 web copies and posters to `public/video/{ru,en}/`.
+
 ## Docker
 
 ```

@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #f03-numbers {
+          position: absolute;
+          inset: 0;
+          font-family: Inter, system-ui, sans-serif;
+          color: #1d2233;
+          overflow: hidden;
+        }
+        #f03-dots {
+          position: absolute;
+          inset: 0;
+          opacity: 0.55;
+          background-image: radial-gradient(circle, #d8d1c0 3px, rgba(216, 209, 192, 0) 4px);
+          background-size: 72px 72px;
+        }
+        #f03-title {
+          position: absolute;
+          left: 70px;
+          top: 66px;
+          width: 940px;
+          text-align: center;
+          font-size: 80px;
+          line-height: 1.05;
+          font-weight: 800;
+          letter-spacing: -0.03em;
+          opacity: 0;
+        }
+        #f03-title em {
+          font-style: normal;
+          color: #c24e08;
+        }
+        .f03-b {
+          position: absolute;
+          width: 470px;
+          height: 200px;
+          border-radius: 36px;
+          background: #fffdf8;
+          border: 3px solid #eadfc8;
+          box-shadow: 0 8px 22px rgba(120, 90, 40, 0.1);
+          opacity: 0;
+          overflow: visible;
+          isolation: isolate;
+        }
+        .f03-b .n {
+          position: absolute;
+          left: 34px;
+          top: 26px;
+          font-size: 68px;
+          font-weight: 800;
+          letter-spacing: -0.03em;
+          line-height: 1;
+          font-variant-numeric: tabular-nums;
+        }
+        .f03-b .n small {
+          font-size: 30px;
+          font-weight: 600;
+          color: #6b6a75;
+          margin-left: 10px;
+          letter-spacing: 0;
+        }
+        .f03-b .tag {
+          position: absolute;
+          left: 34px;
+          bottom: 28px;
+          padding: 8px 22px;
+          border-radius: 999px;
+          background: #e8eefc;
+          color: #1e3a8a;
+          font-size: 30px;
+          font-weight: 700;
+        }
+        .f03-b .halo {
+          position: absolute;
+          inset: -30px;
+          border-radius: 60px;
+          background: radial-gradient(closest-side, rgba(255, 176, 32, 0.55), rgba(255, 176, 32, 0));
+          opacity: 0;
+        }
+      </style>
+
+      <div id="f03-numbers" data-composition-id="f03-numbers" data-width="1080" data-height="1080">
+        <div id="f03-w" style="position: absolute; inset: 0">
+          <div id="f03-dots"></div>
+          <div id="f03-title"></div>
+          <div id="f03-boxes"></div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          var vars = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+          var L = (window.__hfLang || vars.lang) === "en" ? "en" : "ru";
+          var sp = L === "en" ? "," : " ";
+          function num(a, b) {
+            return a + sp + b;
+          }
+          var T = {
+            ru: {
+              title: "<em>Круглые</em> и <em>красивые</em> числа",
+              days: "дней",
+              hours: "часов",
+              items: [
+                [num("10", "000"), "d", "круглое"],
+                [num("300", "000"), "h", "круглое"],
+                [num("11", "111"), "d", "одинаковые цифры"],
+                [num("12", "345"), "d", "последовательность"],
+                [num("12", "321"), "d", "палиндром"],
+                [num("15", "000"), "d", "две цифры и нули"],
+              ],
+            },
+            en: {
+              title: "<em>Round</em> and <em>beautiful</em> numbers",
+              days: "days",
+              hours: "hours",
+              items: [
+                [num("10", "000"), "d", "round"],
+                [num("300", "000"), "h", "round"],
+                [num("11", "111"), "d", "repeating digits"],
+                [num("12", "345"), "d", "sequence"],
+                [num("12", "321"), "d", "palindrome"],
+                [num("15", "000"), "d", "digits and zeros"],
+              ],
+            },
+          }[L];
+          document.getElementById("f03-title").innerHTML = T.title;
+          var holder = document.getElementById("f03-boxes");
+          var xs = [50, 560];
+          var ys = [330, 565, 800];
+          var h = "";
+          T.items.forEach(function (it, i) {
+            var x = xs[i % 2];
+            var y = ys[Math.floor(i / 2)];
+            h +=
+              '<div class="f03-b" id="f03-b' + i + '" style="left:' + x + "px;top:" + y + 'px">' +
+              '<div class="halo" id="f03-h' + i + '"></div>' +
+              '<div class="n">' + it[0] + "<small>" + (it[1] === "d" ? T.days : T.hours) + "</small></div>" +
+              '<div class="tag">' + it[2] + "</div></div>";
+          });
+          holder.innerHTML = h;
+
+          var tl = gsap.timeline({ paused: true });
+          tl.fromTo("#f03-w", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.out" }, 0);
+          tl.to("#f03-w", { opacity: 0, duration: 0.5, ease: "power1.in" }, 8.5);
+          tl.fromTo("#f03-title", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0.3);
+          T.items.forEach(function (it, i) {
+            var t = 1.3 + i * 0.95;
+            tl.fromTo("#f03-b" + i, { opacity: 0, y: 40, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "back.out(1.7)" }, t);
+            tl.fromTo("#f03-h" + i, { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.35, ease: "power2.out" }, t + 0.1);
+            tl.to("#f03-h" + i, { opacity: 0.25, duration: 1.2, ease: "power2.inOut" }, t + 0.5);
+          });
+
+          window.__timelines["f03-numbers"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

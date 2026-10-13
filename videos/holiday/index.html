@@ -1,0 +1,110 @@
+<!doctype html>
+<html
+  lang="ru"
+  data-composition-variables='[{"id":"lang","type":"enum","label":"Language","default":"ru","options":[{"value":"ru","label":"Русский"},{"value":"en","label":"English"}]}]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1080" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1080px;
+        overflow: hidden;
+        background: #fbf5e9;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: #fbf5e9;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="60"
+      data-width="1080"
+      data-height="1080"
+    >
+      <div
+        id="f01"
+        data-composition-id="f01-calendar"
+        data-composition-src="compositions/frames/01-calendar.html"
+        data-start="0"
+        data-duration="15"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1080"
+      ></div>
+      <div
+        id="f02"
+        data-composition-id="f02-more"
+        data-composition-src="compositions/frames/02-more.html"
+        data-start="15"
+        data-duration="10"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1080"
+      ></div>
+      <div
+        id="f03"
+        data-composition-id="f03-numbers"
+        data-composition-src="compositions/frames/03-numbers.html"
+        data-start="25"
+        data-duration="9"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1080"
+      ></div>
+      <div
+        id="f04"
+        data-composition-id="f04-remember"
+        data-composition-src="compositions/frames/04-remember.html"
+        data-start="34"
+        data-duration="9"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1080"
+      ></div>
+      <div
+        id="f05"
+        data-composition-id="f05-export"
+        data-composition-src="compositions/frames/05-export.html"
+        data-start="43"
+        data-duration="9"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1080"
+      ></div>
+      <div
+        id="f06"
+        data-composition-id="f06-cta"
+        data-composition-src="compositions/frames/06-cta.html"
+        data-start="52"
+        data-duration="8"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1080"
+      ></div>
+    </div>
+    <script>
+      try { window.__hfLang = window.__hyperframes.getVariables().lang; } catch (e) {}
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

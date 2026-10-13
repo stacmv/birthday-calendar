@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #f02-more {
+          position: absolute;
+          inset: 0;
+          font-family: Inter, system-ui, sans-serif;
+          color: #1d2233;
+          overflow: hidden;
+        }
+        #f02-glow {
+          position: absolute;
+          left: 140px;
+          top: 300px;
+          width: 800px;
+          height: 800px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(255, 190, 70, 0.5), rgba(255, 150, 60, 0.12) 50%, rgba(255, 150, 60, 0) 70%);
+          opacity: 0;
+        }
+        .f02-t {
+          position: absolute;
+          left: 70px;
+          top: 70px;
+          width: 940px;
+          text-align: center;
+          font-size: 78px;
+          line-height: 1.06;
+          font-weight: 800;
+          letter-spacing: -0.03em;
+          opacity: 0;
+        }
+        .f02-t em {
+          font-style: normal;
+          color: #c24e08;
+        }
+        #f02-phone {
+          position: absolute;
+          left: 320px;
+          top: 400px;
+          width: 440px;
+          height: 700px;
+          border-radius: 58px;
+          background: #1d2233;
+          padding: 14px;
+          box-shadow: 0 30px 70px rgba(120, 80, 20, 0.3);
+        }
+        #f02-screen {
+          position: relative;
+          width: 412px;
+          height: 672px;
+          border-radius: 46px;
+          overflow: hidden;
+          background: #f4f6fb;
+        }
+        #f02-img {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 412px;
+          height: auto;
+        }
+        .f02-chip {
+          position: absolute;
+          padding: 16px 30px;
+          border-radius: 999px;
+          background: #fffdf8;
+          font-size: 42px;
+          font-weight: 700;
+          color: #1d2233;
+          box-shadow: 0 10px 30px rgba(160, 100, 20, 0.25);
+          border: 3px solid #ffb020;
+          white-space: nowrap;
+          opacity: 0;
+        }
+      </style>
+
+      <div id="f02-more" data-composition-id="f02-more" data-width="1080" data-height="1080">
+        <div id="f02-w" style="position: absolute; inset: 0">
+          <div id="f02-glow"></div>
+          <div id="f02-t1" class="f02-t"></div>
+          <div id="f02-t2" class="f02-t"></div>
+          <div id="f02-phone">
+            <div id="f02-screen"><img data-layout-allow-overflow id="f02-img" alt="" src="assets/ru/calendar.png" /></div>
+          </div>
+          <div id="f02-chip1" class="f02-chip" style="left: 40px; top: 560px"></div>
+          <div id="f02-chip2" class="f02-chip" style="right: 40px; top: 760px"></div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          var vars = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+          var L = (window.__hfLang || vars.lang) === "en" ? "en" : "ru";
+          var T = {
+            ru: { t1: "И это <em>не единственная</em> такая дата.", t2: "Дни и часы. Круглые и красивые числа.", c1: "в днях", c2: "в часах" },
+            en: { t1: "And it is <em>not the only</em> one.", t2: "Days and hours. Round and beautiful numbers.", c1: "in days", c2: "in hours" },
+          }[L];
+          document.getElementById("f02-t1").innerHTML = T.t1;
+          document.getElementById("f02-t2").innerHTML = T.t2;
+          document.getElementById("f02-chip1").textContent = T.c1;
+          document.getElementById("f02-chip2").textContent = T.c2;
+          document.getElementById("f02-img").setAttribute("src", "assets/" + L + "/calendar.png");
+
+          var tl = gsap.timeline({ paused: true });
+          tl.fromTo("#f02-w", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.out" }, 0);
+          tl.to("#f02-w", { opacity: 0, duration: 0.5, ease: "power1.in" }, 9.5);
+          tl.fromTo("#f02-glow", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 1.6, ease: "power2.out" }, 0.2);
+
+          tl.fromTo("#f02-t1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0.35);
+          tl.fromTo("#f02-phone", { y: 700 }, { y: 0, duration: 1.3, ease: "power3.out" }, 0.9);
+          tl.to("#f02-t1", { opacity: 0, y: -24, duration: 0.5, ease: "power2.in" }, 3.9);
+          tl.fromTo("#f02-t2", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 4.5);
+
+          // scroll the screenshot (screen px = image px * 412/780)
+          tl.fromTo("#f02-img", { y: 0 }, { y: -330, duration: 3.5, ease: "sine.inOut" }, 3.3);
+
+          tl.fromTo("#f02-chip1", { opacity: 0, x: -40, scale: 0.9 }, { opacity: 1, x: 0, scale: 1, duration: 0.6, ease: "back.out(1.8)" }, 5.4);
+          tl.fromTo("#f02-chip2", { opacity: 0, x: 40, scale: 0.9 }, { opacity: 1, x: 0, scale: 1, duration: 0.6, ease: "back.out(1.8)" }, 6.2);
+
+          window.__timelines["f02-more"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

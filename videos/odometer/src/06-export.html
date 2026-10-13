@@ -1,0 +1,57 @@
+<template>
+<div id="root" data-composition-id="06-export" data-start="0" data-duration="7" data-width="1080" data-height="1080">
+<style>
+/*ODO_CSS*/
+#f6-h{top:50px;text-align:center;left:20px;width:1040px;font-size:64px}
+#f6-grid{position:absolute;left:40px;top:200px;width:560px;height:410px;background:#fff;border:3px solid #b9c4d8;border-radius:28px;box-shadow:0 10px 30px rgba(24,32,51,.12);padding:20px;display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(5,1fr);gap:8px}
+.f6-d{display:flex;align-items:center;justify-content:center;border-radius:14px;font-weight:700;font-size:28px;color:#566380;background:#f4f6fb}
+#f6-chips{position:absolute;left:40px;top:640px;width:560px;display:flex;gap:10px}
+.f6-c{flex:1;text-align:center;padding:12px 0;border-radius:100px;background:#1d4ed8;color:#fff;font-weight:700;font-size:25px;white-space:nowrap}
+.f6-b{position:absolute;left:40px;width:560px;padding:20px 0;border-radius:24px;text-align:center;font-weight:700;font-size:38px}
+#f6-ics{top:740px;background:#182033;color:#fff}
+#f6-g{top:850px;background:#fff;color:#1d4ed8;border:4px solid #1d4ed8}
+#f6-phone{left:640px;top:250px;width:360px;transform-origin:50% 50%}
+#f6-phone .scr{width:360px;height:779px}
+#f6-phone img{width:360px;height:779px}
+</style>
+<div class="bg clip" data-start="0" data-duration="7" data-track-index="0"></div>
+<div id="f6-h" class="h1"></div>
+<div id="f6-grid"></div>
+<div id="f6-chips"></div>
+<div id="f6-ics" class="f6-b"></div>
+<div id="f6-g" class="f6-b"></div>
+<div id="f6-phone" class="phone"><div class="scr"><img data-l="ru" src="assets/ru/export.png"><img data-l="en" src="assets/en/export.png"></div></div>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+/*ODO_JS*/
+(function () {
+  var sp = HF_LANG === "en" ? "," : " ", sf = HF_LANG === "en" ? " days" : " дн."; if (HF_LANG === "en") { var st = document.createElement("style"); st.textContent = ".f6-c{font-size:21px !important}"; document.getElementById("root").appendChild(st); }
+  var D = { ru: { h: "Добавьте их в календарь", ics: "файл .ics", g: "В Google Календарь" }, en: { h: "Add them to your calendar", ics: ".ics file", g: "Add to Google Calendar" } }[HF_LANG];
+  document.getElementById("f6-h").textContent = D.h;
+  document.getElementById("f6-ics").textContent = D.ics;
+  document.getElementById("f6-g").textContent = D.g;
+  pickLang();
+  var nums = ["13" + sp + "300", "13" + sp + "400", "13" + sp + "431"], hits = [4, 14, 22];
+  var gh = "";
+  for (var i = 0; i < 35; i++) gh += '<div class="f6-d">' + ((i % 28) + 1) + "</div>";
+  var g = document.getElementById("f6-grid"); g.innerHTML = gh;
+  var ch = ""; for (var i = 0; i < 3; i++) ch += '<div class="f6-c">' + nums[i] + sf + "</div>";
+  var chips = document.getElementById("f6-chips"); chips.innerHTML = ch;
+  var tl = gsap.timeline({ paused: true });
+  tl.fromTo("#f6-h", { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.7)" }, 0);
+  tl.fromTo("#f6-phone", { x: 500, rotation: 8, opacity: 0 }, { x: 0, rotation: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, 0.1);
+  tl.fromTo("#f6-grid", { opacity: 0, x: -120 }, { opacity: 1, x: 0, duration: 0.6, ease: "power3.out" }, 0.6);
+  for (var k = 0; k < 3; k++) {
+    var cell = g.children[hits[k]], at = 1.5 + k * 0.5;
+    tl.to(cell, { backgroundColor: "#1d4ed8", color: "#ffffff", scale: 1.2, duration: 0.2, ease: "back.out(3)" }, at);
+    tl.to(cell, { scale: 1, duration: 0.2 }, at + 0.2);
+    tl.fromTo(chips.children[k], { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)" }, at + 0.1);
+  }
+  tl.fromTo("#f6-ics", { opacity: 0, x: -100 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 3.4);
+  tl.fromTo("#f6-g", { opacity: 0, x: -100 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 4.2);
+  tl.fromTo("#f6-phone", { scale: 1 }, { scale: 1.03, duration: 0.4, ease: "power1.inOut", transformOrigin: "50% 50%", immediateRender: false }, 5.6);
+  window.__timelines["06-export"] = tl;
+})();
+</script>
+</div>
+</template>

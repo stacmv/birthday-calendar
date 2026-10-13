@@ -1,0 +1,410 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #f01-calendar {
+          position: absolute;
+          inset: 0;
+          font-family: Inter, system-ui, sans-serif;
+          color: #1d2233;
+          overflow: hidden;
+        }
+        #f01-calendar .abs {
+          position: absolute;
+        }
+        #f01-glow {
+          position: absolute;
+          inset: 0;
+          opacity: 0;
+          background: radial-gradient(circle at 388px 715px, rgba(255, 190, 70, 0.55), rgba(255, 150, 60, 0.16) 38%, rgba(255, 150, 60, 0) 66%);
+        }
+        #f01-flash {
+          position: absolute;
+          inset: 0;
+          opacity: 0;
+          background: radial-gradient(circle at 388px 715px, rgba(255, 244, 205, 1), rgba(255, 200, 90, 0.7) 28%, rgba(255, 170, 60, 0) 68%);
+        }
+        #f01-box {
+          position: absolute;
+          left: 180px;
+          top: 210px;
+          width: 720px;
+          height: 740px;
+        }
+        .f01-sheet {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 720px;
+          height: 740px;
+          background: #fffdf8;
+          border-radius: 28px;
+          box-shadow: 0 24px 60px rgba(120, 90, 40, 0.16), 0 2px 6px rgba(120, 90, 40, 0.12);
+          transform-origin: 50% 0%;
+        }
+        .f01-month {
+          position: absolute;
+          left: 36px;
+          top: 26px;
+          font-size: 54px;
+          font-weight: 800;
+          letter-spacing: -0.02em;
+        }
+        .f01-year {
+          position: absolute;
+          right: 36px;
+          top: 40px;
+          font-size: 38px;
+          font-weight: 600;
+          color: #8d897e;
+        }
+        .f01-wd {
+          position: absolute;
+          left: 0;
+          top: 98px;
+          width: 720px;
+          height: 36px;
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+          font-size: 22px;
+          font-weight: 600;
+          color: #6b675d;
+          text-align: center;
+        }
+        .f01-grid {
+          position: absolute;
+          left: 0;
+          top: 140px;
+          width: 720px;
+          height: 600px;
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+          grid-template-rows: repeat(6, 100px);
+        }
+        .f01-cell {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 30px;
+          font-weight: 500;
+          color: #8d897e;
+        }
+        .f01-cell span {
+          position: relative;
+          z-index: 3;
+        }
+        #f01-disc {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          width: 88px;
+          height: 88px;
+          margin: -44px 0 0 -44px;
+          border-radius: 50%;
+          background: radial-gradient(circle at 40% 35%, #ffd35a, #ff9a2e 70%);
+          box-shadow: 0 0 40px 14px rgba(255, 170, 50, 0.7);
+          opacity: 0;
+          z-index: 1;
+        }
+        #f01-ring {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          width: 92px;
+          height: 92px;
+          margin: -46px 0 0 -46px;
+          border-radius: 50%;
+          border: 3px solid rgba(29, 34, 51, 0.55);
+          opacity: 0;
+          z-index: 2;
+        }
+        .f01-pulse {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          width: 92px;
+          height: 92px;
+          margin: -46px 0 0 -46px;
+          border-radius: 50%;
+          border: 4px solid #ffb020;
+          opacity: 0;
+          z-index: 2;
+        }
+        #f01-caps {
+          position: absolute;
+          left: 90px;
+          top: 56px;
+          width: 900px;
+          height: 120px;
+        }
+        .f01-cap {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 900px;
+          text-align: center;
+          font-size: 62px;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          opacity: 0;
+        }
+        #f01-head {
+          position: absolute;
+          left: 140px;
+          top: 62px;
+          width: 800px;
+          text-align: center;
+          font-size: 86px;
+          line-height: 1.04;
+          font-weight: 800;
+          letter-spacing: -0.03em;
+        }
+        #f01-head .w {
+          display: inline-block;
+          margin: 0 0.12em;
+          opacity: 0;
+        }
+        #f01-head .hl {
+          color: #c24e08;
+        }
+        #f01-sub {
+          position: absolute;
+          left: 70px;
+          top: 120px;
+          width: 940px;
+          text-align: center;
+          font-size: 78px;
+          line-height: 1.08;
+          font-weight: 800;
+          letter-spacing: -0.03em;
+          color: #1d2233;
+          opacity: 0;
+        }
+        #f01-conf {
+          position: absolute;
+          inset: 0;
+        }
+        .f01-p {
+          position: absolute;
+          left: 0;
+          top: 0;
+          opacity: 0;
+        }
+      </style>
+
+      <div id="f01-calendar" data-composition-id="f01-calendar" data-width="1080" data-height="1080">
+        <div id="f01-w" class="abs" style="inset: 0">
+          <div id="f01-glow"></div>
+          <div id="f01-box" data-layout-allow-overlap data-layout-allow-occlusion>
+            <div id="f01-s-oct" class="f01-sheet" data-layout-allow-overlap data-layout-allow-occlusion></div>
+            <div id="f01-s-sep" class="f01-sheet" data-layout-allow-overlap data-layout-allow-occlusion></div>
+            <div id="f01-s-aug" class="f01-sheet" data-layout-allow-overlap data-layout-allow-occlusion></div>
+          </div>
+          <div id="f01-caps">
+            <div id="f01-c1" class="f01-cap"></div>
+            <div id="f01-c2" class="f01-cap"></div>
+            <div id="f01-c3" class="f01-cap"></div>
+          </div>
+          <div id="f01-head"></div>
+          <div id="f01-sub"></div>
+          <div id="f01-flash"></div>
+          <div id="f01-conf"></div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          var vars = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+          var L = (window.__hfLang || vars.lang) === "en" ? "en" : "ru";
+          var T = {
+            ru: {
+              months: ["Август", "Сентябрь", "Октябрь"],
+              wd: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
+              c1: "Дни идут.",
+              c2: "Почти все — одинаковые.",
+              c3: "Обычный вторник.",
+              head: ["В этот", "вторник", "вам", "исполнится", "15 000", "дней"],
+              hl: [4, 5],
+              sub: "Праздник, о котором никто не знает.",
+            },
+            en: {
+              months: ["August", "September", "October"],
+              wd: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+              c1: "Days go by.",
+              c2: "Almost all look alike.",
+              c3: "An ordinary Tuesday.",
+              head: ["This", "Tuesday", "you", "turn", "15,000", "days", "old"],
+              hl: [4, 5],
+              sub: "A celebration nobody knows about.",
+            },
+          }[L];
+
+          function build(id, name, startDow, days, withToday) {
+            var el = document.getElementById(id);
+            var h = '<div class="f01-month" data-layout-allow-overlap data-layout-allow-occlusion>' + name + '</div><div class="f01-year" data-layout-allow-overlap data-layout-allow-occlusion>2026</div>';
+            h += '<div class="f01-wd" data-layout-allow-overlap data-layout-allow-occlusion>' + T.wd.map(function (d) { return "<span data-layout-allow-overlap data-layout-allow-occlusion>" + d + "</span>"; }).join("") + "</div>";
+            h += '<div class="f01-grid">';
+            for (var i = 0; i < 42; i++) {
+              var d = i - startDow + 1;
+              if (d >= 1 && d <= days) {
+                if (withToday && d === 13) {
+                  h += '<div class="f01-cell" id="f01-today"><div id="f01-disc"></div><div id="f01-ring"></div><div class="f01-pulse" id="f01-pu1"></div><div class="f01-pulse" id="f01-pu2"></div><span id="f01-tn" data-layout-allow-overlap data-layout-allow-occlusion>13</span></div>';
+                } else {
+                  h += '<div class="f01-cell"><span data-layout-allow-overlap data-layout-allow-occlusion>' + d + "</span></div>";
+                }
+              } else {
+                h += '<div class="f01-cell"></div>';
+              }
+            }
+            h += "</div>";
+            el.innerHTML = h;
+          }
+          build("f01-s-aug", T.months[0], 5, 31, false); // Aug 2026 starts Saturday
+          build("f01-s-sep", T.months[1], 1, 30, false); // Sep 2026 starts Tuesday
+          build("f01-s-oct", T.months[2], 3, 31, true); // Oct 2026 starts Thursday
+
+          if (L === "en") { var hs = document.getElementById("f01-head").style; hs.left = "40px"; hs.width = "1000px"; hs.fontSize = "80px"; }
+          document.getElementById("f01-c1").textContent = T.c1;
+          document.getElementById("f01-c2").textContent = T.c2;
+          document.getElementById("f01-c3").textContent = T.c3;
+          document.getElementById("f01-sub").textContent = T.sub;
+          var head = document.getElementById("f01-head");
+          head.innerHTML = T.head
+            .map(function (w, i) {
+              return '<span class="w' + (T.hl.indexOf(i) >= 0 ? " hl" : "") + '">' + w + "</span>";
+            })
+            .join(" ");
+
+          // geometry of the final (shrunk) state
+          var SC = 0.74;
+          var SHIFT = 120;
+          var ox = 540 + (154.3 - 360) * SC;
+          var oy = 580 + SHIFT + (390 - 370) * SC;
+
+          // deterministic confetti
+          function rng(seed) {
+            return function () {
+              seed |= 0;
+              seed = (seed + 0x6d2b79f5) | 0;
+              var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+              t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+              return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+            };
+          }
+          var R = rng(1507);
+          var cols = ["#ffb020", "#ff7a2f", "#ff5d73", "#1d4ed8", "#ffd35a", "#3ac1a0", "#fffdf8"];
+          var conf = document.getElementById("f01-conf");
+          var pieces = [];
+          for (var i = 0; i < 90; i++) {
+            var p = document.createElement("div");
+            p.className = "f01-p";
+            var w = 10 + R() * 14;
+            var hgt = R() < 0.5 ? w : w * 0.45;
+            p.style.width = w + "px";
+            p.style.height = hgt + "px";
+            p.style.background = cols[Math.floor(R() * cols.length)];
+            p.style.borderRadius = R() < 0.3 ? "50%" : "2px";
+            conf.appendChild(p);
+            var ang = -Math.PI / 2 + (R() - 0.5) * Math.PI * 1.55;
+            var dist = 220 + R() * 520;
+            pieces.push({
+              el: p,
+              dx: Math.cos(ang) * dist,
+              dy: Math.sin(ang) * dist * 0.9,
+              fall: 260 + R() * 360,
+              rot: (R() - 0.5) * 1080,
+              sway: (R() - 0.5) * 120,
+              d1: 0.9 + R() * 0.5,
+              d2: 1.8 + R() * 1.2,
+            });
+          }
+
+          var tl = gsap.timeline({ paused: true });
+
+          // fade in / out of whole frame
+          tl.fromTo("#f01-w", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power1.out" }, 0);
+          tl.to("#f01-w", { opacity: 0, duration: 0.5, ease: "power1.in" }, 14.5);
+
+          // captions
+          tl.fromTo("#f01-c1", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 0.5);
+          tl.to("#f01-c1", { opacity: 0, duration: 0.4 }, 2.1);
+          tl.fromTo("#f01-c2", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 2.3);
+          tl.to("#f01-c2", { opacity: 0, duration: 0.4 }, 3.9);
+          tl.fromTo("#f01-c3", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 4.1);
+          tl.to("#f01-c3", { opacity: 0, duration: 0.4 }, 5.3);
+
+          // box entrance
+          tl.fromTo("#f01-box", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.9, ease: "power2.out" }, 0.1);
+
+          // pages turn
+          tl.fromTo(
+            "#f01-s-aug",
+            { rotationX: 0, opacity: 1, transformPerspective: 1500 },
+            { rotationX: -105, opacity: 0, duration: 1.0, ease: "power2.in" },
+            1.3
+          );
+          tl.fromTo(
+            "#f01-s-sep",
+            { rotationX: 0, opacity: 1, transformPerspective: 1500 },
+            { rotationX: -105, opacity: 0, duration: 1.0, ease: "power2.in" },
+            2.9
+          );
+
+          // ring on the ordinary Tuesday
+          tl.fromTo("#f01-ring", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out" }, 4.1);
+
+          // shrink calendar down
+          tl.to("#f01-box", { scale: SC, y: SHIFT, duration: 1.1, ease: "power2.inOut" }, 4.7);
+
+          // ignition
+          var t0 = 6.0;
+          tl.fromTo("#f01-disc", { opacity: 0, scale: 0.1 }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2.2)" }, t0);
+          tl.to("#f01-tn", { color: "#ffffff", fontWeight: 800, duration: 0.2 }, t0 + 0.1);
+          tl.to("#f01-ring", { opacity: 0, duration: 0.3 }, t0);
+          tl.fromTo("#f01-flash", { opacity: 0 }, { opacity: 1, duration: 0.18, ease: "power2.out" }, t0);
+          tl.to("#f01-flash", { opacity: 0, duration: 1.1, ease: "power2.inOut" }, t0 + 0.2);
+          tl.fromTo("#f01-glow", { opacity: 0 }, { opacity: 1, duration: 1.4, ease: "power2.out" }, t0 + 0.2);
+          tl.fromTo("#f01-pu1", { opacity: 0.9, scale: 1 }, { opacity: 0, scale: 5, duration: 1.3, ease: "power2.out" }, t0 + 0.05);
+          tl.fromTo("#f01-pu2", { opacity: 0.8, scale: 1 }, { opacity: 0, scale: 8, duration: 1.7, ease: "power2.out" }, t0 + 0.3);
+
+          // confetti burst
+          pieces.forEach(function (p) {
+            tl.fromTo(
+              p.el,
+              { x: ox, y: oy, rotation: 0, opacity: 1, scale: 0.4 },
+              { x: ox + p.dx, y: oy + p.dy, rotation: p.rot * 0.5, scale: 1, duration: p.d1, ease: "power3.out" },
+              t0 + 0.05
+            );
+            tl.to(
+              p.el,
+              { x: ox + p.dx + p.sway, y: oy + p.dy + p.fall, rotation: p.rot, duration: p.d2, ease: "sine.in" },
+              t0 + 0.05 + p.d1
+            );
+            tl.to(p.el, { opacity: 0, duration: 0.6, ease: "power1.in" }, t0 + 0.05 + p.d1 + p.d2 - 0.6);
+          });
+
+          // headline words
+          var words = document.querySelectorAll("#f01-head .w");
+          tl.fromTo(
+            words,
+            { opacity: 0, y: 36, scale: 0.94 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "power3.out", stagger: 0.16 },
+            6.5
+          );
+          tl.fromTo("#f01-head .hl", { scale: 1 }, { scale: 1.06, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: 1 }, 8.2);
+
+          // swap to subheadline
+          tl.to("#f01-head", { opacity: 0, y: -30, duration: 0.6, ease: "power2.in" }, 11.0);
+          tl.fromTo("#f01-sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 11.7);
+
+          window.__timelines["f01-calendar"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

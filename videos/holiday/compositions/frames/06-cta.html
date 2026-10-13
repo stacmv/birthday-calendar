@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #f06-cta {
+          position: absolute;
+          inset: 0;
+          font-family: Inter, system-ui, sans-serif;
+          color: #1d2233;
+          overflow: hidden;
+        }
+        #f06-glow {
+          position: absolute;
+          left: 90px;
+          top: 90px;
+          width: 900px;
+          height: 900px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(255, 196, 80, 0.75), rgba(255, 150, 60, 0.2) 48%, rgba(255, 150, 60, 0) 70%);
+          opacity: 0;
+        }
+        #f06-icon {
+          position: absolute;
+          left: 440px;
+          top: 120px;
+          width: 200px;
+          height: 200px;
+          border-radius: 46px;
+          box-shadow: 0 20px 50px rgba(120, 80, 20, 0.35);
+          opacity: 0;
+        }
+        #f06-name {
+          position: absolute;
+          left: 40px;
+          top: 360px;
+          width: 1000px;
+          text-align: center;
+          font-size: 64px;
+          font-weight: 700;
+          color: #4a4a58;
+          opacity: 0;
+        }
+        #f06-find {
+          position: absolute;
+          left: 40px;
+          top: 450px;
+          width: 1000px;
+          text-align: center;
+          font-size: 128px;
+          line-height: 1;
+          font-weight: 800;
+          letter-spacing: -0.04em;
+          color: #c24e08;
+          opacity: 0;
+        }
+        #f06-url {
+          position: absolute;
+          left: 60px;
+          top: 740px;
+          width: 960px;
+          text-align: center;
+        }
+        #f06-url span {
+          display: inline-block;
+          padding: 22px 40px;
+          border-radius: 999px;
+          background: #1d2233;
+          color: #fffdf8;
+          font-size: 42px;
+          font-weight: 700;
+          letter-spacing: -0.01em;
+          box-shadow: 0 16px 40px rgba(29, 34, 51, 0.3);
+        }
+        #f06-url {
+          opacity: 0;
+        }
+        #f06-conf {
+          position: absolute;
+          inset: 0;
+        }
+        .f06-p {
+          position: absolute;
+          left: 0;
+          top: 0;
+          opacity: 0;
+        }
+      </style>
+
+      <div id="f06-cta" data-composition-id="f06-cta" data-width="1080" data-height="1080">
+        <div id="f06-w" style="position: absolute; inset: 0">
+          <div id="f06-glow"></div>
+          <div id="f06-conf"></div>
+          <img id="f06-icon" alt="" src="assets/icon-512.png" />
+          <div id="f06-name"></div>
+          <div id="f06-find"></div>
+          <div id="f06-url"><span>anniversary-calendar.hitty-missy.ru</span></div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          var vars = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+          var L = (window.__hfLang || vars.lang) === "en" ? "en" : "ru";
+          var T = {
+            ru: { name: "Календарь юбилеев", find: "Узнайте свои" },
+            en: { name: "Jubilee Calendar", find: "Find yours" },
+          }[L];
+          document.getElementById("f06-name").textContent = T.name;
+          document.getElementById("f06-find").textContent = T.find;
+
+          function rng(seed) {
+            return function () {
+              seed |= 0;
+              seed = (seed + 0x6d2b79f5) | 0;
+              var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+              t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+              return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+            };
+          }
+          var R = rng(4242);
+          var cols = ["#ffb020", "#ff7a2f", "#ff5d73", "#1d4ed8", "#ffd35a", "#3ac1a0"];
+          var conf = document.getElementById("f06-conf");
+          var pieces = [];
+          for (var i = 0; i < 36; i++) {
+            var p = document.createElement("div");
+            p.className = "f06-p";
+            var w = 9 + R() * 12;
+            p.style.width = w + "px";
+            p.style.height = (R() < 0.5 ? w : w * 0.45) + "px";
+            p.style.background = cols[Math.floor(R() * cols.length)];
+            p.style.borderRadius = R() < 0.3 ? "50%" : "2px";
+            conf.appendChild(p);
+            pieces.push({ el: p, x: 40 + R() * 1000, y0: -40 - R() * 200, y1: 1100, rot: (R() - 0.5) * 720, d: 4.5 + R() * 2.2, t: R() * 1.4 });
+          }
+
+          var tl = gsap.timeline({ paused: true });
+          tl.fromTo("#f06-w", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.out" }, 0);
+          tl.fromTo("#f06-glow", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 1.6, ease: "power2.out" }, 0.1);
+          tl.fromTo("#f06-icon", { opacity: 0, scale: 0.6, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: "back.out(1.8)" }, 0.4);
+          tl.fromTo("#f06-name", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.9);
+          tl.fromTo("#f06-find", { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.9, ease: "power3.out" }, 1.4);
+          tl.fromTo("#f06-url", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 2.4);
+
+          pieces.forEach(function (p) {
+            tl.fromTo(
+              p.el,
+              { x: p.x, y: p.y0, rotation: 0, opacity: 1 },
+              { x: p.x + (R() - 0.5) * 120, y: p.y1, rotation: p.rot, duration: p.d, ease: "none" },
+              0.6 + p.t
+            );
+            tl.to(p.el, { opacity: 0, duration: 0.4 }, 0.6 + p.t + p.d - 0.4);
+          });
+
+          window.__timelines["f06-cta"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

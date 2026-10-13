@@ -1,0 +1,66 @@
+<template>
+<div id="root" data-composition-id="03-jubilees" data-start="0" data-duration="11" data-width="1080" data-height="1080">
+<style>
+/*ODO_CSS*/
+#f3-dial{position:absolute;left:-120px;top:380px;width:1320px;height:1320px;opacity:.35}
+#f3-h{top:56px;text-align:center;left:20px;width:1040px;font-size:62px}
+#f3-phone{left:326px;top:380px;width:400px;transform-origin:0 0}
+#f3-phone .scr{width:400px;height:865px}
+#f3-phone img{width:400px;height:865px}
+.f3-ring{position:absolute;border:6px solid #b42318;border-radius:16px;opacity:0;box-shadow:0 0 0 8px rgba(180,35,24,.15)}
+.f3-card{position:absolute;left:520px;width:510px;background:#fff;border:3px solid #b9c4d8;border-radius:28px;box-shadow:0 10px 30px rgba(24,32,51,.12);display:flex;flex-direction:column;align-items:center}
+.f3-lab{align-self:flex-start;margin:18px 0 0 28px;font-weight:700;font-size:30px;letter-spacing:4px;color:#4a5568}
+.f3-ow{display:flex;justify-content:center;width:100%}
+#f3-soon{left:520px;top:752px;font-size:44px;background:#b42318;color:#fff}
+.f3-chip{position:absolute;top:850px;padding:10px 26px;border-radius:100px;font-weight:700;font-size:36px;background:#e8eefc;color:#1e3a8a;border:3px solid #b9c4d8;white-space:nowrap}
+</style>
+<div class="bg clip" data-start="0" data-duration="11" data-track-index="0"></div>
+<div id="f3-dial"></div>
+<div id="f3-h" class="h1"></div>
+<div id="f3-phone" class="phone"><div class="scr">
+  <img data-l="ru" src="assets/ru/calendar.png"><img data-l="en" src="assets/en/calendar.png">
+  <div id="f3-r" class="f3-ring" style="left:30px;top:494px;width:340px;height:122px"></div>
+</div></div>
+<div id="f3-ca" class="f3-card" style="top:180px;height:262px"><div id="f3-la" class="f3-lab"></div><div class="f3-ow" style="margin-top:14px"><div id="f3-oa"></div></div></div>
+<div id="f3-cb" class="f3-card" style="top:472px;height:250px"><div id="f3-lb" class="f3-lab"></div><div class="f3-ow" style="margin-top:14px"><div id="f3-ob"></div></div></div>
+<span id="f3-soon" class="pill"></span>
+<span id="f3-c1" class="f3-chip" style="left:520px">&times;100</span>
+<span id="f3-c2" class="f3-chip" style="left:690px">&times;1000</span>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+/*ODO_JS*/
+(function () {
+  var D = { ru: { h: "Юбилеи в днях и часах", la: "ДНЕЙ", lb: "ЧАСОВ", soon: "скоро", sep: "" }, en: { h: "Jubilees in days and hours", la: "DAYS", lb: "HOURS", soon: "soon", sep: "," } }[HF_LANG];
+  document.getElementById("f3-h").textContent = D.h;
+  document.getElementById("f3-la").textContent = D.la;
+  document.getElementById("f3-lb").textContent = D.lb;
+  document.getElementById("f3-soon").textContent = D.soon;
+  pickLang();
+  makeDial(document.getElementById("f3-dial"), 1320, "#1d4ed8");
+  var oa = makeOdo(document.getElementById("f3-oa"), { n: 5, cw: 78, ch: 118, fs: 98, sep: D.sep });
+  var ob = makeOdo(document.getElementById("f3-ob"), { n: 6, cw: 66, ch: 100, fs: 82, sep: D.sep, hideLead: true });
+  var sa = [{ t: 1.7, dur: 0.35, add: 2 }, { t: 2.3, dur: 1.3, add: 700 }, { t: 3.8, dur: 1.1, add: 1000 }];
+  var sb = [{ t: 5.0, dur: 2.0, add: 400000 }];
+  var proxy = { t: 0 };
+  function render() {
+    var t = proxy.t;
+    oa.draw(stepsValue(13298, sa, t), stepsValue(13298, sa, t - 0.03), t > 5.0);
+    ob.draw(stepsValue(0, sb, t), stepsValue(0, sb, t - 0.03), t > 7.1);
+    document.getElementById("f3-dial").style.transform = "rotate(" + beatRot(t, 6, 0.5, 0.2).toFixed(2) + "deg)";
+  }
+  var tl = gsap.timeline({ paused: true });
+  tl.to(proxy, { t: 11, duration: 11, ease: "none", onUpdate: render }, 0);
+  tl.fromTo("#f3-h", { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.7)" }, 0.1);
+  tl.fromTo("#f3-phone", { x: 0, y: 0, scale: 1 }, { x: -238, y: -170, scale: 0.85, duration: 0.8, ease: "power3.inOut" }, 0.2);
+  tl.fromTo("#f3-ca", { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: 0.6, ease: "power3.out" }, 1.1);
+  tl.fromTo("#f3-cb", { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: 0.6, ease: "power3.out" }, 4.6);
+  tl.fromTo("#f3-soon", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2.4)", transformOrigin: "0 50%" }, 7.4);
+  tl.fromTo("#f3-r", { opacity: 0, scale: 1.1 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, 7.5);
+  tl.fromTo("#f3-c1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(2)" }, 8.5);
+  tl.fromTo("#f3-c2", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(2)" }, 9.0);
+  render();
+  window.__timelines["03-jubilees"] = tl;
+})();
+</script>
+</div>
+</template>

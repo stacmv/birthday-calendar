@@ -1,0 +1,126 @@
+<template>
+  <style>
+    @font-face { font-family: "Liberation Serif"; font-weight: 400; font-style: normal; src: url("assets/fonts/LiberationSerif-Regular.ttf"); }
+    @font-face { font-family: "Liberation Serif"; font-weight: 700; font-style: normal; src: url("assets/fonts/LiberationSerif-Bold.ttf"); }
+    @font-face { font-family: "Liberation Serif"; font-weight: 400; font-style: italic; src: url("assets/fonts/LiberationSerif-Italic.ttf"); }
+    @font-face { font-family: "Liberation Serif"; font-weight: 700; font-style: italic; src: url("assets/fonts/LiberationSerif-BoldItalic.ttf"); }
+    @font-face { font-family: "Liberation Sans"; font-weight: 700; font-style: normal; src: url("assets/fonts/LiberationSans-Bold.ttf"); }
+
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Liberation Serif", serif; color: #1c1915; }
+    .f6-bg { position: absolute; inset: 0; background-color: #efe7d3; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .15 0 0 0 .14 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+      radial-gradient(ellipse at 25% 15%, rgba(255,255,255,0.4), transparent 60%),
+      radial-gradient(ellipse at 85% 95%, rgba(120,90,40,0.16), transparent 60%); }
+    #f6-wrap { position: absolute; inset: 0; }
+    .f6-strip { position: absolute; left: 48px; right: 48px; top: 30px; display: flex; justify-content: space-between; align-items: center;
+      font-family: "Liberation Sans", sans-serif; font-weight: 700; font-size: 20px; letter-spacing: 0.16em; text-transform: uppercase; }
+    .f6-strip b { color: #b42318; border: 3px solid #b42318; padding: 3px 12px; }
+    .f6-rule { position: absolute; left: 48px; right: 48px; top: 74px; border-top: 5px solid #1c1915; border-bottom: 2px solid #1c1915; height: 10px; }
+    .f6-kick { font-family: "Liberation Sans", sans-serif; font-weight: 700; font-size: 24px; letter-spacing: 0.18em; text-transform: uppercase; color: #b42318; }
+    .f6-h { font-weight: 700; line-height: 1.0; letter-spacing: -0.01em; }
+    .f6-deck { font-size: 36px; line-height: 1.2; color: #2b261f; }
+    .f6-ta, .f6-tb { white-space: inherit; }
+    .f6-tb { opacity: 0; }
+    .f6-photo { position: absolute; background: #fbf7ea; padding: 10px 10px 0; box-shadow: 0 14px 30px rgba(40,30,10,0.38), 0 0 0 2px #1c1915; transform-origin: 50% 50%; }
+    .f6-view { position: relative; overflow: hidden; background: #fff; box-shadow: inset 0 0 0 2px #1c1915; }
+    .f6-pan { position: absolute; left: 0; top: 0; width: 100%; }
+    .f6-pan img { display: block; width: 100%; }
+    .f6-pan svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; }
+    .f6-mark { fill: none; stroke: #b42318; stroke-width: 5; stroke-linecap: round; }
+    .f6-cap { font-style: italic; font-size: 22px; line-height: 1.15; padding: 8px 4px 10px; color: #2b261f; }
+    .f6-tape { position: absolute; width: 120px; height: 34px; top: -16px; left: 50%; margin-left: -60px; background: rgba(214,196,140,0.78); transform: rotate(-3deg); box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
+    .f6-tick { position: absolute; left: 48px; right: 48px; bottom: 34px; height: 54px; background: #1c1915; color: #efe7d3; overflow: hidden; }
+    .f6-tick div { position: absolute; left: 0; top: 0; line-height: 54px; white-space: nowrap; font-family: "Liberation Sans", sans-serif; font-weight: 700; font-size: 21px; letter-spacing: 0.16em; text-transform: uppercase; }
+    .f6-stamp { position: absolute; z-index: 6; border: 7px solid #b42318; color: #b42318; font-family: "Liberation Sans", sans-serif; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 20px; border-radius: 8px; background: rgba(239,231,211,0.55); transform-origin: 50% 50%; }
+
+    #f6-col { position: absolute; left: 48px; top: 116px; width: 540px; }
+    #f6-h { font-size: 82px; margin-top: 12px; }
+    .en #f6-h { font-size: 92px; }
+    #f6-deck { margin-top: 20px; font-size: 34px; }
+    .f6-bl { margin-top: 24px; }
+    .f6-b { display: block; font-size: 34px; line-height: 1.15; padding: 14px 0 14px 44px; border-top: 2px solid #1c1915; position: relative; }
+    .f6-b::before { content: ""; position: absolute; left: 6px; top: 24px; width: 18px; height: 18px; background: #b42318; transform: rotate(45deg); }
+    #f6-wifi { position: absolute; left: 640px; top: 120px; width: 230px; height: 250px; z-index: 5; overflow: visible; }
+    #f6-wifi path.w { fill: none; stroke: #1c1915; stroke-width: 14; stroke-linecap: round; }
+    #f6-wifi circle { fill: #1c1915; }
+    #f6-wifi path.x { fill: none; stroke: #b42318; stroke-width: 18; stroke-linecap: round; }
+    #f6-st { right: 40px; top: 350px; font-size: 56px; z-index: 6; }
+    #f6-ph { z-index: 3; }
+    #f6-ic { display: block; width: 100%; background: #fff; }
+
+  </style>
+
+  <div id="root" data-composition-id="06-offline" data-width="1080" data-height="1080">
+    <div id="f6-ground" class="clip f6-bg" data-start="0" data-duration="8" data-track-index="0"></div>
+    <div id="f6-wrap">
+      <div class="f6-strip"><span data-t="mast"></span><b data-t="extra"></b></div>
+      <div class="f6-rule"></div>
+      <div id="f6-col">
+        <div class="f6-kick" data-t="kick"></div>
+        <div class="f6-h" id="f6-h"></div>
+        <div class="f6-deck" id="f6-deck"></div>
+        <div class="f6-bl">
+          <span class="f6-b" id="f6-b1" data-t="b1"></span>
+          <span class="f6-b" id="f6-b2" data-t="b2"></span>
+          <span class="f6-b" id="f6-b3" data-t="b3"></span>
+        </div>
+      </div>
+      <div class="f6-photo" id="f6-ph" style="left:650px;top:500px;width:330px;">
+        <div class="f6-tape"></div>
+        <div class="f6-view" style="width:310px;height:310px;"><img id="f6-ic" src="assets/icon-512.png" alt=""></div>
+        <div class="f6-cap" data-t="cap"></div>
+      </div>
+      <svg id="f6-wifi" viewBox="0 0 100 100">
+        <path class="w" id="f6-w1" d="M10 38 Q50 4 90 38"/><path class="w" id="f6-w2" d="M24 54 Q50 32 76 54"/><path class="w" id="f6-w3" d="M38 69 Q50 59 62 69"/>
+        <circle cx="50" cy="82" r="6"/>
+        <path class="x" id="f6-x" d="M12 92 L88 8" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/>
+      </svg>
+      <div class="f6-stamp" id="f6-st" data-t="st"></div>
+
+      <div class="f6-tick"><div id="f6-tickin">Работает офлайн &#9733; Работает офлайн &#9733; Работает офлайн &#9733; Работает офлайн</div></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+
+      const SCOPE = document.querySelector('[data-composition-id="06-offline"]');
+      const V = (window.__hyperframes && window.__hyperframes.getVariables) ? window.__hyperframes.getVariables() : {};
+      const V2 = (V && V.lang) ? V : (window.__hfVariables || {}); const LK = Object.keys(V2).filter(function (k) { return k.toLowerCase() === "lang"; })[0]; const lang = LK && String(V2[LK]).toLowerCase() === "en" ? "en" : "ru";
+      const D = {"ru": {"mast": "Вестник юбилеев · стр. 6", "extra": "Экстренный выпуск", "kick": "Без связи", "h": "Работает без интернета", "deck": "Ставится на телефон как приложение и открывается офлайн.", "b1": "Устанавливается на телефон", "b2": "Открывается без сети", "b3": "Считает прямо в браузере", "cap": "Значок на экране телефона", "st": "Офлайн", "tick": "Работает офлайн"}, "en": {"mast": "The Jubilee Times · p. 6", "extra": "Extra edition", "kick": "No signal", "h": "Works offline", "deck": "Install it on your phone as an app and open it offline.", "b1": "Installs on your phone", "b2": "Opens without a network", "b3": "Calculated right in the browser", "cap": "The icon on your phone screen", "st": "Offline", "tick": "Works offline"}}[lang];
+      document.getElementById("f6-wrap").classList.toggle("en", lang === "en");
+      SCOPE.querySelectorAll("[data-t]").forEach(function (el) { el.textContent = D[el.getAttribute("data-t")]; });
+      function typeIn(tl, id, text, at, dur) {
+        const el = SCOPE.querySelector("#" + id);
+        el.innerHTML = '<span class="f6-ta"></span><span class="f6-tb"></span>';
+        const a = el.firstChild, b = el.lastChild; b.textContent = text;
+        const o = { n: 0 };
+        tl.fromTo(o, { n: 0 }, { n: text.length, duration: dur, ease: "none", onUpdate: function () {
+          const k = Math.round(o.n);
+          a.textContent = text.slice(0, k) + (k > 0 && k < text.length ? "|" : "");
+          b.textContent = text.slice(k);
+        } }, at);
+      }
+      const tl = gsap.timeline({ paused: true });
+      const DUR = 8;
+      document.getElementById("f6-tickin").textContent = [D.tick, D.tick, D.tick, D.tick].join(" ★ ");
+      // bottom ticker crawl
+      tl.fromTo("#f6-tickin", { x: 0 }, { x: -700, duration: DUR, ease: "none" }, 0);
+      // page chrome
+      tl.fromTo(".f6-strip", { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 0.1);
+      tl.fromTo(".f6-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.out", transformOrigin: "0% 50%" }, 0.15);
+
+
+      typeIn(tl, "f6-h", D.h, 0.5, 1.6);
+      typeIn(tl, "f6-deck", D.deck, 2.2, 2.0);
+      tl.fromTo("#f6-wifi", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)" }, 1.0);
+      tl.fromTo("#f6-x", { opacity: 0 }, { opacity: 1, strokeDashoffset: 0, duration: 0.5, ease: "power3.in" }, 2.6);
+      tl.fromTo("#f6-st", { scale: 3.2, opacity: 0, rotation: -25 }, { scale: 1, opacity: 1, rotation: 8, duration: 0.28, ease: "power4.in" }, 3.4);
+      tl.fromTo("#f6-ph", { y: 600, rotation: 14, opacity: 0 }, { y: 0, rotation: -3, opacity: 1, duration: 0.7, ease: "power3.out" }, 3.9);
+      ["f6-b1", "f6-b2", "f6-b3"].forEach(function (id, i) {
+        tl.fromTo("#" + id, { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 4.2 + i * 1.2);
+      });
+
+      window.__timelines["06-offline"] = tl;
+    })();
+  </script>
+</template>
