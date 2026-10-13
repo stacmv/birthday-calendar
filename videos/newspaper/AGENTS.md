@@ -1,3 +1,5 @@
+> **This machine: run every `hyperframes` command (preview, snapshot, check, render, capture) INSIDE WSL only** — headless Chrome on the Windows host causes BSODs (see `D:/dev/CLAUDE.local.md`). The working project is `~/hf/ac-<concept>` in WSL; this folder is a copy of its sources — see `../README.md`.
+
 # HyperFrames Composition Project
 
 ## Skills — USE THESE FIRST

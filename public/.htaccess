@@ -25,11 +25,11 @@ DirectoryIndex index.html
   <FilesMatch "\.html$">
     Header set Cache-Control "no-cache"
   </FilesMatch>
-  # CSS/JS are not fingerprinted: revalidate (the service worker caches the shell itself).
-  <FilesMatch "\.(css|js|mjs)$">
+  # CSS/JS and promo videos/posters are not fingerprinted: revalidate (ETag -> 304).
+  <FilesMatch "\.(css|js|mjs|jpg|mp4)$">
     Header set Cache-Control "no-cache"
   </FilesMatch>
-  <FilesMatch "\.(png|svg|ico|jpg|mp4)$">
+  <FilesMatch "\.(png|svg|ico)$">
     Header set Cache-Control "public, max-age=2592000"
   </FilesMatch>
 </IfModule>
