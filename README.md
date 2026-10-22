@@ -70,7 +70,9 @@ see `videos/README.md`); masters are rendered inside WSL. `make promo-videos` mu
 ## Releases
 
 Versions follow SemVer and are computed from Conventional Commits since the last `vX.Y.Z` tag. `develop` is the
-working trunk, `master` always points at the latest release.
+working trunk, `master` always points at the latest release. Releases are cut by the shared engine in the sibling
+checkout `../devtools` (`git@git.glgx.ru:stacmv.net/devtools.git`, see its README); this project's settings are
+in `release.config.json`.
 
 - `make release-check` - dry run: the next version and the CHANGELOG section it would write.
 - `make release` - on a clean `develop` level with `origin/develop`: writes `VERSION` and `CHANGELOG.md`, stamps

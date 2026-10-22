@@ -1,0 +1,10 @@
+{
+  "releaseBranch": "master",
+  "stamp": [
+    { "file": "public/app/index.html", "pattern": "(<span data-version>)[^<]*(</span>)" },
+    { "file": "public/ru/index.html", "pattern": "(<span data-version>)[^<]*(</span>)" },
+    { "file": "public/en/index.html", "pattern": "(<span data-version>)[^<]*(</span>)" }
+  ],
+  "after": ["node scripts/build.mjs"],
+  "outputs": ["public/app/sw.js"]
+}

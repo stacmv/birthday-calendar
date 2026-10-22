@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help install serve test coverage test-e2e e2e-install lint build build-check icons landing-screenshots promo-videos release-check release prod-tree deploy-check deploy-prod
+.PHONY: help install serve test coverage test-e2e e2e-install lint build build-check icons landing-screenshots promo-videos devtools release-check release prod-tree deploy-check deploy-prod
 
 WSL_DIR := /mnt/d/dev/anniversary-calendar
 DEPLOY_INI := ../anniversary-calendar.deployment.prod.ini
@@ -45,23 +45,26 @@ landing-screenshots: ## Recapture landing screenshots INSIDE WSL if public/app c
 promo-videos: ## Build landing promo videos (music + 720p + posters) from HyperFrames masters INSIDE WSL (FORCE=1 to rebuild)
 	wsl -d Ubuntu -e bash -lc 'cd $(WSL_DIR) && FORCE=$(FORCE) bash scripts/promo-videos.sh'
 
-release-check: ## Dry-run release: next version and changelog from commits since the last tag
-	node scripts/release.mjs
+# Releases are cut by the shared engine in the sibling devtools checkout (release.config.json here).
+DEVTOOLS ?= ../devtools
+RELEASE := $(DEVTOOLS)/release
 
-release: ## Cut a release from develop: VERSION, CHANGELOG, tag vX.Y.Z, master moved to it, pushed (V=1.0.0 to set by hand)
-	node scripts/release.mjs --apply $(if $(V),--version=$(V))
+devtools:
+	@test -f $(RELEASE)/release.mjs || { echo "ERROR: devtools not found at $(DEVTOOLS) (clone git@git.glgx.ru:stacmv.net/devtools.git next to this project)"; exit 2; }
+
+release-check: devtools ## Dry-run release: next version and changelog from commits since the last tag
+	node $(RELEASE)/release.mjs
+
+release: devtools ## Cut a release from develop: VERSION, CHANGELOG, tag vX.Y.Z, master moved to it, pushed (V=1.0.0 to set by hand)
+	node $(RELEASE)/release.mjs --apply $(if $(V),--version=$(V))
 
 # Production gets a release, not the working copy: the latest tag on master is checked out into a separate
 # worktree next to the project, and that is what $(DEPLOY_INI) uploads (local = anniversary-calendar-prod/public).
 PROD_TREE := ../anniversary-calendar-prod
 
-prod-tree: ## Check out the latest release into ../anniversary-calendar-prod
-	@set -e; \
-	tag=$$(git describe --tags --abbrev=0 --match 'v[0-9]*' master 2>/dev/null) || { echo "No release on master yet: run make release first"; exit 1; }; \
-	if [ -e $(PROD_TREE)/.git ]; then git -C $(PROD_TREE) checkout -q --force --detach $$tag; else git worktree add -q --detach $(PROD_TREE) $$tag; fi; \
-	git -C $(PROD_TREE) clean -fdq; \
-	node $(PROD_TREE)/scripts/build.mjs --check; \
-	echo "Production tree: $$tag in $(PROD_TREE)"
+prod-tree: devtools ## Check out the latest release into ../anniversary-calendar-prod
+	node $(RELEASE)/prod-tree.mjs $(PROD_TREE)
+	node $(PROD_TREE)/scripts/build.mjs --check
 
 deploy-check: prod-tree ## Dry run of deploying the latest release: list what would be uploaded or deleted
 	@test -f deployment.phar || { echo "ERROR: deployment.phar (dg/ftp-deployment) missing in the project root"; exit 2; }
