@@ -67,13 +67,6 @@ muted autoplay (no autoplay under `prefers-reduced-motion`). Sources live in `vi
 see `videos/README.md`); masters are rendered inside WSL. `make promo-videos` muxes the music and writes the
 720×720 web copies and posters to `public/video/{ru,en}/`.
 
-## Docker
-
-```
-docker build -t anniversary-calendar .
-docker run --rm -p 8080:8080 anniversary-calendar
-```
-
 ## Deploy (Jino shared hosting, FTP)
 
 The FTP config lives outside the repo, next to the other projects' configs:
