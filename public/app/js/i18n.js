@@ -59,6 +59,7 @@ export const STRINGS = {
     evtNextTitle: 'Календарь юбилеев: получить следующие юбилеи',
     evtNextDesc: 'Откройте ссылку, чтобы получить следующую порцию юбилеев:',
     footerNote: 'Расчёт идёт в часовом поясе вашего браузера. Данные хранятся только на этом устройстве.',
+    versionLabel: 'Версия',
   },
   en: {
     appName: 'Jubilee Calendar',
@@ -118,6 +119,7 @@ export const STRINGS = {
     evtNextTitle: 'Jubilee calendar: get the next jubilees',
     evtNextDesc: 'Open the link to get the next batch of jubilees:',
     footerNote: 'Calculated in your browser time zone. Data is stored on this device only.',
+    versionLabel: 'Version',
   },
 };
 

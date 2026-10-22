@@ -67,14 +67,35 @@ muted autoplay (no autoplay under `prefers-reduced-motion`). Sources live in `vi
 see `videos/README.md`); masters are rendered inside WSL. `make promo-videos` muxes the music and writes the
 720×720 web copies and posters to `public/video/{ru,en}/`.
 
+## Releases
+
+Versions follow SemVer and are computed from Conventional Commits since the last `vX.Y.Z` tag. `develop` is the
+working trunk, `master` always points at the latest release.
+
+- `make release-check` - dry run: the next version and the CHANGELOG section it would write.
+- `make release` - on a clean `develop` level with `origin/develop`: writes `VERSION` and `CHANGELOG.md`, stamps
+  the version into `package.json`/`package-lock.json` and into every `<span data-version>` of the app and landing
+  footers (`public/app/index.html`, `public/{ru,en}/index.html`), runs `make build` (so the service worker cache
+  changes and installed PWAs update), commits `chore(release): vX.Y.Z`, tags it, moves `master` there and pushes
+  all three.
+- Bump rules: the first release is 0.1.0. In 0.x `feat` or a breaking change bumps minor, anything else patch.
+  From 1.0.0 on a breaking change (`feat!:` or a `BREAKING CHANGE:` footer) bumps major. Leaving 0.x is
+  deliberate: `make release V=1.0.0`.
+
+A working copy before the first release shows `dev` in the footers.
+
 ## Deploy (Jino shared hosting, FTP)
+
+Production gets the latest release, not the working copy: `make deploy-check` and `make deploy-prod` first check
+out the latest tag on `master` into the worktree `../anniversary-calendar-prod` (`make prod-tree`) and verify its
+`sw.js` is built. Cut a release first (`make release`).
 
 The FTP config lives outside the repo, next to the other projects' configs:
 `D:/dev/anniversary-calendar.deployment.prod.ini` (template: `deployment.prod.ini.example`;
-`local = anniversary-calendar/public`, so only `public/` is uploaded).
+`local = anniversary-calendar-prod/public`, so only `public/` of the release is uploaded).
 `deployment.phar` (dg/ftp-deployment) sits in the project root, gitignored.
 
 1. `make deploy-check` - dry run: what would be uploaded or deleted.
-2. `make deploy-prod` - build and upload.
+2. `make deploy-prod` - upload.
 
 PWA installation needs HTTPS on the production domain.

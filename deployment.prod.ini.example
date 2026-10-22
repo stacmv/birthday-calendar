@@ -9,8 +9,8 @@ user = your-ftp-user
 password = your-ftp-password
 passiveMode = yes
 
-; resolved relative to the ini file (D:/dev): only public/ is uploaded
-local = anniversary-calendar/public
+; resolved relative to the ini file (D:/dev): only public/ of the latest release (make prod-tree) is uploaded
+local = anniversary-calendar-prod/public
 test = no
 
 ignore = "
