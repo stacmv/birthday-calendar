@@ -4,7 +4,7 @@
 // changes exactly when a shipped file changes. Do not edit that block by hand.
 
 /* BUILD:BEGIN */
-const VERSION = '7e8e7ec1e134';
+const VERSION = 'b4fb2f2da61f';
 const SHELL = [
   './',
   '../shared/promo.js',
