@@ -8,3 +8,4 @@ deployment.prod.ini
 .deployment
 *.log
 /deployment.phar
+.claude/worktrees/

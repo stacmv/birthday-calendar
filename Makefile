@@ -59,10 +59,10 @@ release: devtools ## Cut a release from develop: VERSION, CHANGELOG, tag vX.Y.Z,
 	node $(RELEASE)/release.mjs --apply $(if $(V),--version=$(V))
 
 # Production gets a release, not the working copy: the latest tag on master is checked out into a separate
-# worktree next to the project, and that is what $(DEPLOY_INI) uploads (local = anniversary-calendar-prod/public).
-PROD_TREE := ../anniversary-calendar-prod
+# worktree inside the project (.claude/worktrees/prod, git-ignored), and that is what $(DEPLOY_INI) uploads (local = anniversary-calendar/.claude/worktrees/prod/public).
+PROD_TREE := .claude/worktrees/prod
 
-prod-tree: devtools ## Check out the latest release into ../anniversary-calendar-prod
+prod-tree: devtools ## Check out the latest release into .claude/worktrees/prod
 	node $(RELEASE)/prod-tree.mjs $(PROD_TREE)
 	node $(PROD_TREE)/scripts/build.mjs --check
 
@@ -71,7 +71,7 @@ deploy-check: prod-tree ## Dry run of deploying the latest release: list what wo
 	@test -f $(DEPLOY_INI) || { echo "ERROR: $(DEPLOY_INI) missing (template: deployment.prod.ini.example)"; exit 2; }
 	php deployment.phar $(DEPLOY_INI) --test
 
-deploy-prod: prod-tree ## Deploy the latest release (public/ of ../anniversary-calendar-prod) to production over FTP
+deploy-prod: prod-tree ## Deploy the latest release (public/ of .claude/worktrees/prod) to production over FTP
 	@test -f deployment.phar || { echo "ERROR: deployment.phar (dg/ftp-deployment) missing in the project root"; exit 2; }
 	@test -f $(DEPLOY_INI) || { echo "ERROR: $(DEPLOY_INI) missing (template: deployment.prod.ini.example)"; exit 2; }
 	php deployment.phar $(DEPLOY_INI)

@@ -89,7 +89,7 @@ A working copy before the first release shows `dev` in the footers.
 ## Deploy (Jino shared hosting, FTP)
 
 Production gets the latest release, not the working copy: `make deploy-check` and `make deploy-prod` first check
-out the latest tag on `master` into the worktree `../anniversary-calendar-prod` (`make prod-tree`) and verify its
+out the latest tag on `master` into the worktree `.claude/worktrees/prod` (`make prod-tree`) and verify its
 `sw.js` is built. Cut a release first (`make release`).
 
 The FTP config lives outside the repo, next to the other projects' configs:
